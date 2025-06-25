@@ -1,29 +1,134 @@
 #include "fighter.h"
 
 fighterA player = {
-    .x = 0,
-    .y = 0,
+    .x = 1,
+    .y = 1,
     .shape = '^'
 };
 
-Entity enemy = {
-    .x = 0,
-    .y = 0,
-    .shape = 'V',
-    .alive = true
-};
+Entity enemies[ENEMY_MAX];
 
-// 절대 좌표로 이동
+Shield shield = { .active = false, .shape1 = '*', .shape2 = '|', .count = 5};
+
+int death_cout = 5;
+int enemy_cout = 0;
+
+void init_death_count() {
+    death_count = 5;
+}
+
+int get_death_count() {
+    return death_count;
+}
+
+int minus_death_count() {
+    return death_count--;
+}
+
 int set_player_position(int new_x, int new_y) {
-    player.x = new_x;
-    player.y = new_y;
-    //screen[player.y][player.x] = player.shape;
+    if (0 < new_x < XSIZE - 1 && 0 < new_y < YSIZE - 1) {
+        player.x = new_x;
+        player.y = new_y;
+    }
     return 0;
 }
 
-// 상대(dx, dy)만큼 이동
-int move_player(int dx, int dy) {
+int update_player(int dx, int dy) {
+    int tmpx = player.x + dx;
+    int tmpy = player.y + dy;
+    if (tmpx == 0 || tmpx >= XSIZE - 1 || tmpy == 0 || tmpy >= YSIZE - 1)
+        return 1;
     player.x += dx;
     player.y += dy;
     return 0;
+}
+
+void draw_player() {
+    screen[player.y][player.x] = player.shape;
+}
+
+void spawn_enemy() {
+    if (enemy_count >= ENEMY_MAX) return;
+    int x_spawn = (rand() % (XSIZE - 2)) + 1;
+    enemies[enemy_count++] = (Entity){
+        .x = x_spawn,
+        .y = 1,
+        .shape = 'V',
+        .alive = true
+    };
+}
+
+void update_enemy() {
+    static DWORD last_spawn = 0;
+    DWORD now = GetTickCount();
+
+    // 1초마다 적 생성
+    if (now - last_spawn >= 1000) {
+        spawn_enemy();
+        last_spawn = now;
+    }
+
+    // 모든 적을 한 칸 아래로 이동
+    for (int i = 0; i < enemy_count; i++) {
+        if (!enemies[i].alive) continue;
+        enemies[i].y += 1;
+        // 화면 밖으로 나가면 비활성화
+        if (enemies[i].y >= YSIZE - 1)
+            enemies[i].alive = false;
+            
+    }
+}
+
+void draw_enemy() {
+    update_enemy();
+    for (int i = 0; i < ENEMY_MAX; i++) {
+        if (enemies[i].alive == true)
+            screen[enemies[i].y][enemies[i].x] = enemies[i].shape;
+    }
+}
+
+void init_enemy() {
+    srand((unsigned)time(NULL));
+    enemy_count = 0;
+    for (int i = 0; i < ENEMY_MAX; i++) {
+        enemies[i].alive = false;
+    }
+}
+
+int kill_enemy() {
+    //todo
+    return 0;
+}
+
+void init_shield_count() {
+    shield.count = 100;
+}
+
+int get_shield_count() {
+    return shield.count;
+}
+
+void active_skill() {
+    if (shield.count == 0) return;
+    shield.active = !shield.active;
+    if (shield.active == true)
+        shield.count--;
+}
+
+void deactive_skill() {
+    shield.active = false;
+}
+
+void draw_skill() {
+    if (shield.active == false) return;
+    int x = player.x;
+    int y = player.y;
+    screen[y + 1][x + 1] = shield.shape1;
+    screen[y][x + 1] = shield.shape2;
+    screen[y - 1][x + 1] = shield.shape1;
+    screen[y - 1][x] = shield.shape1;
+    screen[y - 1][x - 1] = shield.shape1;
+    screen[y][x - 1] = shield.shape2;
+    screen[y + 1][x - 1] = shield.shape1;
+    screen[y + 1][x] = shield.shape1;
 }

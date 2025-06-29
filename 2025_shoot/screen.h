@@ -6,9 +6,7 @@
 #include "fighter.h"
 #include "bullet.h"
 #include "score.h"
-
-#define XSIZE	80			// 화면 가로 크기
-#define	YSIZE	45			// 세로 크기
+#include "constant.h"
 
 extern char screen[YSIZE][XSIZE];
 

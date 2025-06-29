@@ -8,7 +8,8 @@ fighterA player = {
 
 Entity enemies[ENEMY_MAX];
 
-Shield shield = { .active = false, .shape1 = '*', .shape2 = '|', .count = 5};
+// 쉴드 (스킬)
+Shield shield = { .active = false, .shape1 = '*', .shape2 = '!', .count = 5};
 
 int death_cout = 5;
 int enemy_cout = 0;
@@ -22,7 +23,11 @@ int get_death_count() {
 }
 
 int minus_death_count() {
-    return death_count--;
+    if (--death_count <= 0) {
+        death_count = 0;
+        game_over = 1;
+    }
+    return death_count;
 }
 
 int set_player_position(int new_x, int new_y) {
@@ -60,6 +65,7 @@ void spawn_enemy() {
 
 void update_enemy() {
     static DWORD last_spawn = 0;
+    static DWORD last_move = 0;
     DWORD now = GetTickCount();
 
     // 1초마다 적 생성
@@ -68,20 +74,23 @@ void update_enemy() {
         last_spawn = now;
     }
 
-    // 모든 적을 한 칸 아래로 이동
-    for (int i = 0; i < enemy_count; i++) {
-        if (!enemies[i].alive) continue;
-        enemies[i].y += 1;
-        // 화면 밖으로 나가면 비활성화
-        if (enemies[i].y >= YSIZE - 1)
-            enemies[i].alive = false;
-            
+    if (now - last_move >= 500) {
+        // 모든 적을 한 칸 아래로 이동
+        for (int i = 0; i < enemy_count; i++) {
+            if (!enemies[i].alive) continue;
+            enemies[i].y += 1;
+            // 화면 밖으로 나가면 비활성화
+            if (enemies[i].y >= YSIZE - 1)
+                enemies[i].alive = false;
+        }
+        last_move = now;
     }
 }
 
 void draw_enemy() {
     update_enemy();
-    for (int i = 0; i < ENEMY_MAX; i++) {
+    kill_enemy();
+    for (int i = 0; i < enemy_count; i++) {
         if (enemies[i].alive == true)
             screen[enemies[i].y][enemies[i].x] = enemies[i].shape;
     }
@@ -90,33 +99,48 @@ void draw_enemy() {
 void init_enemy() {
     srand((unsigned)time(NULL));
     enemy_count = 0;
-    for (int i = 0; i < ENEMY_MAX; i++) {
+    for (int i = 0; i < enemy_count; i++) {
         enemies[i].alive = false;
     }
 }
 
 int kill_enemy() {
-    //todo
+    int bcount = get_bullet_count();
+    for (int i = 0; i < enemy_count; i++) {
+        if (!enemies[i].alive) continue;
+        if (player.x == enemies[i].x && player.y == enemies[i].y) {
+            minus_death_count();
+            set_player_position(XSIZE / 2, YSIZE - 2);
+        }
+        for (int j = 0; j < bcount; j++) {
+            if (bullets[j].x == enemies[i].x && bullets[j].y == enemies[i].y) {
+                enemies[i].alive = false;
+                add_score();
+            }
+        }
+    }
     return 0;
 }
 
 void init_shield_count() {
-    shield.count = 100;
+    shield.count = 5;
 }
 
 int get_shield_count() {
     return shield.count;
 }
 
-void active_skill() {
-    if (shield.count == 0) return;
-    shield.active = !shield.active;
-    if (shield.active == true)
-        shield.count--;
+void active_shield() {
+    shield.active = true;
+    shield.count--;
 }
 
-void deactive_skill() {
+void deactive_shield() {
     shield.active = false;
+}
+
+bool shield_status() {
+    return shield.active;
 }
 
 void draw_skill() {

@@ -2,6 +2,7 @@
 #include "screen.h"
 
 int game_over = 0;
+int ckey = 0;
 
 int handle_input() {
 	while (1) {
@@ -41,11 +42,10 @@ int handle_input() {
 	return 0;
 }
 
-int skill() {
-	active_skill();
-	//add_score();
-	//minus_death_count();
-	return 0;
+void skill() {
+	int shCount = get_shield_count();
+	if (!shCount && !shield_status()) return;
+	shield_status() ? deactive_shield() : active_shield();
 }
 
 int pause() {

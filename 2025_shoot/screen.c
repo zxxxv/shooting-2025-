@@ -69,15 +69,15 @@ int show_screen_whole() {
 
 
 int render_screen() {
-	
 	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	COORD home = { 0, 0 };
 	SetConsoleCursorPosition(hOut, home);
 	clear_buffer();
-	draw_player();
-	draw_enemy();
+	//draw_player();
 	draw_bullets();
+	draw_enemy();
 	draw_skill();
+	draw_player();
 	show_screen_whole();
 	return 0;
 }
@@ -89,6 +89,7 @@ int start_screen() {
 	init_death_count();
 	init_shield_count();
 	init_score();
+	deactive_shield();
 	render_screen();
 	return 0;
 }

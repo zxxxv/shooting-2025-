@@ -6,7 +6,7 @@ int rank() {
 	char answer;
 	while (1) {
 		system("cls");
-		show_rank();
+		printf(" *game over*\n");
 		printf("\n 현재 점수: %d\n", score);
 		printf(" 점수를 등록 하시겠습니까(y/n)?: ");
 		scanf_s("%c%*c", &answer, 1);
@@ -30,12 +30,12 @@ int add_rank() {
 }
 
 void show_rank() {
-	printf(" *High Scores*\n");
+	printf("\n *High Scores*\n");
 	//todo
 }
 
 int add_score() {
-	return score ++;
+	return ++score;
 }
 
 int get_score() {

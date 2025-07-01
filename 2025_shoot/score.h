@@ -19,12 +19,14 @@ static Rankers rankers[RANK_MAX];
 static int score = 0;
 
 int rank();
-void add_ranker();
-Node* make_node(char* nick, Node* next);
 int add_score();
 void init_score();
-void show_rank();
 int get_score();
+
+void init_rank();
+int add_ranker();
+void show_rank();
 int find_index(Rankers* arr, int score, int start, int end);
 int read_rankers();
-void init_rank();
+int write_rankers();
+Rankers* make_node(char* nick, int index);

@@ -13,7 +13,7 @@ int update_bullets(enum BULLET_LEV level);		// ÃÑ¾Ë ÇÑÄ­ ¿Ã¶ó°¡±â ¡æ yÁÂÇ¥-- ¡æ 
 void draw_bullets();		// ¹öÆÛ¿¡ ¸ðµç ÃÑ¾Ë Âï±â
 void hit_bullets();
 int get_bullet_count();
-enum BULLET_LEV set_bullet_lev();
+enum BULLET_LEV set_bullet_lev(int score);
 
 extern DWORD last_spawn_ms;
 extern DWORD last_move_ms;

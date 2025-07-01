@@ -9,9 +9,27 @@ int get_bullet_count() {
     return bullet_count;
 }
 
-enum BULLET_LEV set_bullet_lev() {
-    //todo
-    return BULLET_LEV_ULTRA;
+enum BULLET_LEV set_bullet_lev(int score) {
+    int k = score / 15;
+    enum BULLET_LEV lev;
+    switch (k) {
+        case 0:
+            lev = BULLET_LEV_MIN;
+            break;
+        case 1:
+            lev = BULLET_LEV_LOW;
+            break;
+        case 2:
+            lev = BULLET_LEV_MEDIUM;
+            break;
+        case 3:
+            lev = BULLET_LEV_HIGH;
+            break;
+        default:
+            lev = BULLET_LEV_ULTRA;
+            break;
+    }
+    return lev;
 }
 
 int update_bullets(enum BULLET_LEV level) {
@@ -33,12 +51,9 @@ int update_bullets(enum BULLET_LEV level) {
     if (now - last_move_ms >= 50) {
         for (int i = 0; i < bullet_count; ) {
             bullets[i].y--;
-            if (bullets[i].y < 1) {
+            if (bullets[i].y < 1)
                 bullets[i] = bullets[--bullet_count];
-            }
-            else {
-                i++;
-            }
+            else i++;
         }
         last_move_ms = now;
     }
@@ -47,13 +62,11 @@ int update_bullets(enum BULLET_LEV level) {
 }
 
 void draw_bullets() {
-    enum BULLET_LEV level = set_bullet_lev();
+    score = get_score();
+    enum BULLET_LEV level = set_bullet_lev(score);
     update_bullets(level);
     for (int i = 0; i < bullet_count; i++) {
         screen[bullets[i].y][bullets[i].x] = bullets[i].shape;
     }
 }
 
-void hit_bullets() {
-
-}

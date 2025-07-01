@@ -1,12 +1,15 @@
 #include "input.h"
 
+static void key_skill();
+static int handle_input();
+static int handle_quit();
+
 int game_over = 0;
 int quit = 0;
-int ckey = 0;
 
 int (*input[])() = { handle_input, handle_quit };
 
-int handle_input() {
+static int handle_input() {
 	while (1) {
 		if (!_kbhit()) return 0;
 		int c = _getch();
@@ -18,7 +21,7 @@ int handle_input() {
 		if (c == 'r' || c == 'R') {
 			start_screen();
 		}
-		if (c == 32) skill();
+		if (c == 32) key_skill();
 		if (c == 224) {
 			c = _getch();
 			switch (c) {
@@ -42,7 +45,7 @@ int handle_input() {
 	return 0;
 }
 
-int handle_quit() {
+static int handle_quit() {
 	//char *one;
 	//system("cls");
 	printf("\n 종료(q) 재시작(r)\t:");
@@ -61,7 +64,7 @@ int handle_quit() {
 	return 0;
 }
 
-void skill() {
+static void key_skill() {
 	int shCount = get_shield_count();
 	if (!shCount && !shield_status()) return;
 	shield_status() ? deactive_shield() : active_shield();

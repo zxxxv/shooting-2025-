@@ -14,8 +14,7 @@ void draw_bullets();		                    // ¹öÆÛ¿¡ ¸ðµç ÃÑ¾Ë Âï±â
 int get_bullet_count();
 enum BULLET_LEV set_bullet_lev(int score);
 char* get_bullet_lev();
+void init_bullet();
+void init_bullet_lev();
 
-extern DWORD last_spawn_ms;
-extern DWORD last_move_ms;
 extern Bullet bullets[YSIZE];
-static enum BULLET_LEV level = BULLET_LEV_MIN;

@@ -8,6 +8,7 @@
 #define SHIELD_COUNT        5           // 쉴드 개수
 #define DEATH_COUNT         5           // 데카 수
 
+// 총알 발사 속도
 enum BULLET_LEV {
     BULLET_LEV_MIN = 300,
     BULLET_LEV_LOW = 250,

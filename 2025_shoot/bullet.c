@@ -1,8 +1,9 @@
 #include "bullet.h"
 
-DWORD last_spawn_ms = 0;
-DWORD last_move_ms = 0;
 Bullet bullets[YSIZE];
+static DWORD last_spawn_ms = 0;
+static DWORD last_move_ms = 0;
+static enum BULLET_LEV level = BULLET_LEV_MIN;
 static int bullet_count = 0;
 
 int get_bullet_count() {
@@ -62,7 +63,7 @@ int update_bullets(enum BULLET_LEV level) {
 }
 
 void draw_bullets() {
-    score = get_score();
+    int score = get_score();
     level = set_bullet_lev(score);
     update_bullets(level);
     for (int i = 0; i < bullet_count; i++) {
@@ -74,4 +75,14 @@ char *get_bullet_lev() {
     int i = level/50 - 2;
     char* bullet_speed[] = { "V", "IV", "III", "II", "I" };
     return bullet_speed[i];
+}
+
+void init_bullet() {
+    last_spawn_ms = last_move_ms = GetTickCount();
+    Bullet bullets[YSIZE] = { 0, };
+    bullet_count = 0;
+}
+
+void init_bullet_lev() {
+    level = BULLET_LEV_MIN;
 }

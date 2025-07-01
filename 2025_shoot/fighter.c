@@ -8,9 +8,10 @@ fighterA player = {
 
 Entity enemies[ENEMY_MAX];
 
+static int death_count = 0;
+static int enemy_count = 0;
 
-int death_count = 0;
-int enemy_count = 0;
+static int kill_enemy();
 
 void init_death_count() {
     death_count = DEATH_COUNT;
@@ -102,7 +103,7 @@ void init_enemy() {
     }
 }
 
-int kill_enemy() {
+static int kill_enemy() {
     int bcount = get_bullet_count();
     for (int i = 0; i < enemy_count; i++) {
         if (!enemies[i].alive) continue;

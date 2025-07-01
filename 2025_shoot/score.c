@@ -1,7 +1,25 @@
 #include "score.h"
 
-//int rank_count = 0;
-//int node_count = 0;
+typedef struct Node {
+	char name[32];
+	//int final_score;
+	struct Node* next;
+} Node;
+
+typedef struct Rankers {
+	int score;
+	struct Node* first;
+} Rankers;
+
+static int score = 0;
+static Rankers rankers[RANK_MAX];
+
+static int  add_ranker(void);
+static void show_rank(void);
+static Rankers* make_node(char* nick, int index);
+static int  find_index(Rankers* arr, int score, int start, int end);
+static int  read_rankers(void);
+static int  write_rankers(void);
 
 int rank() {
 	char answer;
@@ -23,7 +41,7 @@ int rank() {
 	return 0;
 }
 
-Rankers* make_node(char* nick, int index) {
+static Rankers* make_node(char* nick, int index) {
 	Node* rank = malloc(sizeof(Node));
 	if (rank == NULL) return (Rankers*)NULL;
 	strcpy_s(rank->name, strlen(nick)+1, nick);
@@ -37,7 +55,7 @@ Rankers* make_node(char* nick, int index) {
 	return rankers;
 }
 
-int add_ranker() {
+static int add_ranker() {
 	char nick[32];
 	printf("\n 등록할 이름을 적어주세요: ");
 	scanf_s("%31s%*c", nick, (unsigned)sizeof(nick));
@@ -48,7 +66,7 @@ int add_ranker() {
 	return 0;
 }
 
-int find_index(Rankers *arr, int score, int start, int end) {
+static int find_index(Rankers *arr, int score, int start, int end) {
 	int mid, count;
 	count = end - start;
 	if (count == 0) return start;
@@ -60,7 +78,7 @@ int find_index(Rankers *arr, int score, int start, int end) {
 	}
 }
 
-int read_rankers() {
+static int read_rankers() {
 	FILE* fp;
 	fopen_s(&fp, "rank.txt", "r");
 	if (fp == NULL) return 1;
@@ -69,7 +87,7 @@ int read_rankers() {
 	return 0;
 }
 
-int write_rankers() {
+static int write_rankers() {
 	FILE* fp;
 	fopen_s(&fp, "rank.txt", "w");
 	if (fp == NULL) return 1;
@@ -85,7 +103,7 @@ void init_rank() {
 	}
 }
 
-void show_rank() {
+static void show_rank() {
 	system("cls");
 	printf("\n *Rank*\n");
 	int seq = 1;

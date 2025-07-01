@@ -1,7 +1,10 @@
 #include "screen.h"
 
+static int show_screen_whole();
+
 char screen[YSIZE][XSIZE];
 
+// 화면 버퍼 초기화
 static void clear_buffer() {
 	for (int y = 0; y < YSIZE; y++) {
 		for (int x = 0; x < XSIZE; x++) {
@@ -19,14 +22,14 @@ static void clear_buffer() {
 	}
 }
 
-int show_screen_whole() {
+static int show_screen_whole() {
 	enum {
 		EXIT_LEN = sizeof(" exit: q\n") - 1,
 		RESTART_LEN = sizeof("\t restart: r\n") - 1,
 		SHIELD_LEN = sizeof("\n shield:999") - 1,							// 최대 3자리 수
 		DEATH_LEN = sizeof("\t\t\t    death_count:999") - 1,				// 최대 3자리 수
 		SCORE_LEN = sizeof("\t\t      score:999\n") - 1,					// 최대 3자리 수
-		LEVEL_LEN = sizeof("\t\t\t\t\t       level:III")
+		LEVEL_LEN = sizeof("\t\t\t\t\t       level:III")					
 	};
 	static char buf[
 		SHIELD_LEN +
@@ -78,7 +81,6 @@ int render_screen() {
 	COORD home = { 0, 0 };
 	SetConsoleCursorPosition(hOut, home);
 	clear_buffer();
-	//draw_player();
 	draw_bullets();
 	draw_enemy();
 	draw_skill();
@@ -89,12 +91,13 @@ int render_screen() {
 
 int start_screen() {
 	set_player_position(XSIZE / 2, YSIZE - 2);
-	last_spawn_ms = last_move_ms = GetTickCount();
 	init_enemy();
 	init_death_count();
 	init_shield_count();
 	init_score();
 	deactive_shield();
+	init_bullet();
+	init_bullet_lev();
 	render_screen();
 	return 0;
 }

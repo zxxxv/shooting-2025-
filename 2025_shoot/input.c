@@ -1,5 +1,4 @@
 #include "input.h"
-#include "screen.h"
 
 int game_over = 0;
 int ckey = 0;

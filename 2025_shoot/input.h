@@ -3,6 +3,8 @@
 #include <conio.h>
 #include <signal.h>
 #include "fighter.h"
+#include "screen.h"
+#include "skill.h"
 
 int handle_input();		// 방향키, 종료, 재시작
 void skill();			// 스킬 발동

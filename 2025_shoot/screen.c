@@ -21,21 +21,21 @@ static void clear_buffer() {
 
 int show_screen_whole() {
 	enum {
-		EXIT_LEN = sizeof(" exit: q\n") - 1, 
-		RESTART_LEN = sizeof("\t restart: r\n") - 1, 
+		EXIT_LEN = sizeof(" exit: q\n") - 1,
+		RESTART_LEN = sizeof("\t restart: r\n") - 1,
 		SHIELD_LEN = sizeof("\n shield:999") - 1,							// 최대 3자리 수
 		DEATH_LEN = sizeof("\t\t\t    death_count:999") - 1,				// 최대 3자리 수
-		SCORE_LEN = sizeof("\t\t      score:999\n") - 1,				// 최대 3자리 수
+		SCORE_LEN = sizeof("\t\t      score:999\n") - 1,					// 최대 3자리 수
 		LEVEL_LEN = sizeof("\t\t\t\t\t       level:III")
 	};
 	static char buf[
-		SHIELD_LEN + 
-		(XSIZE + 1) * YSIZE + 
-		EXIT_LEN + 
-		RESTART_LEN + 
-		DEATH_LEN +
-		SCORE_LEN +
-		LEVEL_LEN
+		SHIELD_LEN +
+			(XSIZE + 1) * YSIZE +
+			EXIT_LEN +
+			RESTART_LEN +
+			DEATH_LEN +
+			SCORE_LEN +
+			LEVEL_LEN
 	];
 
 	char* p = buf;
@@ -72,7 +72,6 @@ int show_screen_whole() {
 	fflush(stdout);
 	return 0;
 }
-
 
 int render_screen() {
 	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);

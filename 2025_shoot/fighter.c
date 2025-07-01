@@ -8,14 +8,12 @@ fighterA player = {
 
 Entity enemies[ENEMY_MAX];
 
-// ½¯µå (½ºÅ³)
-Shield shield = { .active = false, .shape1 = '*', .shape2 = '!', .count = 5};
 
-int death_cout = 5;
-int enemy_cout = 0;
+int death_count = 0;
+int enemy_count = 0;
 
 void init_death_count() {
-    death_count = 5;
+    death_count = DEATH_COUNT;
 }
 
 int get_death_count() {
@@ -120,39 +118,4 @@ int kill_enemy() {
         }
     }
     return 0;
-}
-
-void init_shield_count() {
-    shield.count = 5;
-}
-
-int get_shield_count() {
-    return shield.count;
-}
-
-void active_shield() {
-    shield.active = true;
-    shield.count--;
-}
-
-void deactive_shield() {
-    shield.active = false;
-}
-
-bool shield_status() {
-    return shield.active;
-}
-
-void draw_skill() {
-    if (shield.active == false) return;
-    int x = player.x;
-    int y = player.y;
-    screen[y + 1][x + 1] = shield.shape1;
-    screen[y][x + 1] = shield.shape2;
-    screen[y - 1][x + 1] = shield.shape1;
-    screen[y - 1][x] = shield.shape1;
-    screen[y - 1][x - 1] = shield.shape1;
-    screen[y][x - 1] = shield.shape2;
-    screen[y + 1][x - 1] = shield.shape1;
-    screen[y + 1][x] = shield.shape1;
 }

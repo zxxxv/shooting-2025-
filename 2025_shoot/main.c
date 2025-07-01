@@ -4,6 +4,7 @@
 #include "screen.h"
 #include "input.h"
 #include "score.h"
+#include "skill.h"
 
 int main() {
 	start_screen();

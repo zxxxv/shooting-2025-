@@ -7,6 +7,7 @@
 #include "bullet.h"
 #include "score.h"
 #include "constant.h"
+#include "skill.h"
 
 extern char screen[YSIZE][XSIZE];
 

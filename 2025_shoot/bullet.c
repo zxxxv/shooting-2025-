@@ -70,8 +70,6 @@ void draw_bullets() {
     }
 }
 
-
-
 char *get_bullet_lev() {
     int i = level/50 - 2;
     char* bullet_speed[] = { "V", "IV", "III", "II", "I" };

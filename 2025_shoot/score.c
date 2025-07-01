@@ -63,14 +63,14 @@ void add_ranker() {
 	//}
 }
 
-int find_index(Rankers *arr[], int score, int start, int end) {
+int find_index(Rankers *arr, int score, int start, int end) {
 	int mid, count;
 	count = end - start;
 	if (count == 0) return start;
 	else {
 		mid = start + count / 2;
-		if (arr[mid]->score == score) return mid;
-		else if (arr[mid]->score > score) return find_index(arr, score, start, mid);
+		if (arr[mid].score == score) return mid;
+		else if (arr[mid].score > score) return find_index(arr, score, start, mid);
 		else return find_index(arr, score, mid +1 , end);
 	}
 }

@@ -75,13 +75,3 @@ void init_game() {
 void quit_game() {
 	quit = 1;
 }
-
-int pause() {
-	//todo
-	return 0;
-}
-
-int resume() {
-	//todo
-	return 0;
-}

@@ -14,12 +14,13 @@ typedef struct Rankers {
 static int score = 0;
 static Rankers rankers[RANK_MAX];
 
-static int  add_ranker(void);
-static void show_rank(void);
+static int  add_ranker();
+static void show_rank();
 static Rankers* make_node(char* nick, int index);
 static int  find_index(Rankers* arr, int score, int start, int end);
-static int  read_rankers(void);
-static int  write_rankers(void);
+static int  read_rankers();
+static int  write_rankers();
+static int free_rankers();
 
 int rank() {
 	char answer;
@@ -93,6 +94,11 @@ static int write_rankers() {
 	if (fp == NULL) return 1;
 	// TODO
 	fclose(fp);
+	return 0;
+}
+
+static int free_rankers() {
+	// TODO
 	return 0;
 }
 

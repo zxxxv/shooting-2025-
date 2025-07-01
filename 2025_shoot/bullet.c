@@ -6,6 +6,8 @@ static DWORD last_move_ms = 0;
 static enum BULLET_LEV level = BULLET_LEV_MIN;
 static int bullet_count = 0;
 
+static void init_bullet_lev();
+
 int get_bullet_count() {
     return bullet_count;
 }
@@ -81,8 +83,9 @@ void init_bullet() {
     last_spawn_ms = last_move_ms = GetTickCount();
     Bullet bullets[YSIZE] = { 0, };
     bullet_count = 0;
+    init_bullet_lev();
 }
 
-void init_bullet_lev() {
+static void init_bullet_lev() {
     level = BULLET_LEV_MIN;
 }

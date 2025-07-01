@@ -1,10 +1,10 @@
 #include "screen.h"
 
-static int show_screen_whole();
+static int show_screen_whole();			// 스크린 전체 출력
+static void clear_buffer();				// 화면 버퍼 초기화
 
 char screen[YSIZE][XSIZE];
 
-// 화면 버퍼 초기화
 static void clear_buffer() {
 	for (int y = 0; y < YSIZE; y++) {
 		for (int x = 0; x < XSIZE; x++) {
@@ -60,10 +60,12 @@ static int show_screen_whole() {
 		p += XSIZE;
 		*p++ = '\n';
 	}
-
+	
+	// exit
 	memcpy(p, " exit: q", EXIT_LEN);
 	p += EXIT_LEN;
 
+	// restart
 	memcpy(p, "\t restart: r", RESTART_LEN);
 	p += RESTART_LEN;
 
@@ -97,7 +99,6 @@ int start_screen() {
 	init_score();
 	deactive_shield();
 	init_bullet();
-	init_bullet_lev();
 	render_screen();
 	return 0;
 }

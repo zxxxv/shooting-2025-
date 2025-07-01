@@ -9,12 +9,12 @@ typedef struct Bullet {
 	char shape;		// '+'
 } Bullet;
 
-int update_bullets(enum BULLET_LEV level);		// 총알 한칸 올라가기 → y좌표-- → 화면 밖으로 나간 총알 제거
+extern Bullet bullets[YSIZE];
+
+int update_bullets(enum BULLET_LEV level);		// 총알 한칸 올라가기, y좌표--, 화면 밖으로 나간 총알 제거
 void draw_bullets();		                    // 버퍼에 모든 총알 찍기
 int get_bullet_count();
-enum BULLET_LEV set_bullet_lev(int score);
+enum BULLET_LEV set_bullet_lev(int score);		// 속도 설정
 char* get_bullet_lev();
-void init_bullet();
-void init_bullet_lev();
+void init_bullet();								// 총알 초기화
 
-extern Bullet bullets[YSIZE];

@@ -19,3 +19,5 @@ void active_shield();
 void deactive_shield();
 int get_shield_count();
 bool shield_status();
+
+void (*skills)();

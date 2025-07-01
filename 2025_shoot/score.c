@@ -5,14 +5,13 @@
 
 int rank() {
 	char answer;
-	init_rank();
 	//if (read_rankers()) return 1;
 	while (1) {
 		system("cls");
 		printf(" *game over*\n");
 		printf("\n 현재 점수: %d\n", score);
-		printf(" 점수를 등록 하시겠습니까(y/n)?: ");
-		scanf_s("%c%*c", &answer, 1);
+		printf("\n 점수를 등록 하시겠습니까(y/n)?: ");
+		scanf_s("%1c%*c", &answer, 1);
 		if (answer == 'y') {
 			if (add_ranker()) return 1;
 			show_rank();
@@ -40,11 +39,12 @@ Rankers* make_node(char* nick, int index) {
 
 int add_ranker() {
 	char nick[32];
-	printf(" 등록할 이름을 적어주세요: ");
-	scanf_s("%31s", nick, (unsigned)sizeof(nick));
+	printf("\n 등록할 이름을 적어주세요: ");
+	scanf_s("%31s%*c", nick, (unsigned)sizeof(nick));
 	int score = get_score();
 	//int index = find_index(rankers, score, 0, RANK_MAX);
 	if (!make_node(nick, score)) return 1;
+	//if (write_rankers()) return 2;
 	return 0;
 }
 
@@ -95,9 +95,9 @@ void show_rank() {
 			Node* head, *next;
 			head = rankers[RANK_MAX - i].first;
 			next = head->next;
-			printf("\n %d. [%d] ", seq++, rankers->score);
+			printf("\n %d. [%d] ", seq++, rankers[RANK_MAX - i].score);
 			while (head != NULL) {
-				printf("%s", head->name);
+				printf("*%s* ", head->name);
 				if (!next) break;
 				head = next;
 				next = head->next;

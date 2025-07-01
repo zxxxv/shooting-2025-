@@ -1,13 +1,14 @@
 #include "input.h"
 
 int game_over = 0;
+int quit = 0;
 int ckey = 0;
+
+int (*input[])() = { handle_input, handle_quit };
 
 int handle_input() {
 	while (1) {
-		if (!_kbhit()) {
-			return 0;
-		}
+		if (!_kbhit()) return 0;
 		int c = _getch();
 		int r = 0;
 		if (c == 'q' || c == 'Q') {
@@ -41,10 +42,38 @@ int handle_input() {
 	return 0;
 }
 
+int handle_quit() {
+	//char *one;
+	//system("cls");
+	printf("\n 종료(q) 재시작(r)\t:");
+	//scanf("%c", one);
+	//if (!_kbhit()) return 0;
+	int c = _getch();
+	int r = 0;
+	if (c == 'q' || c == 'Q') {
+		quit_game();
+	}
+	if (c == 'r' || c == 'R') {
+		system("cls");
+		init_game();
+		start_screen();
+	}
+	return 0;
+}
+
 void skill() {
 	int shCount = get_shield_count();
 	if (!shCount && !shield_status()) return;
 	shield_status() ? deactive_shield() : active_shield();
+}
+
+void init_game() {
+	quit = 0;
+	game_over = 0;
+}
+
+void quit_game() {
+	quit = 1;
 }
 
 int pause() {

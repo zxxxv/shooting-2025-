@@ -18,11 +18,13 @@ typedef struct Rankers {
 static Rankers rankers[RANK_MAX];
 static int score = 0;
 
+// Á¡¼ö
 int rank();
 int add_score();
 void init_score();
 int get_score();
 
+// ·©Å©
 void init_rank();
 int add_ranker();
 void show_rank();

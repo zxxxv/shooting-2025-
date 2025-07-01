@@ -10,11 +10,12 @@ typedef struct Bullet {
 } Bullet;
 
 int update_bullets(enum BULLET_LEV level);		// 총알 한칸 올라가기 → y좌표-- → 화면 밖으로 나간 총알 제거
-void draw_bullets();		// 버퍼에 모든 총알 찍기
-void hit_bullets();
+void draw_bullets();		                    // 버퍼에 모든 총알 찍기
 int get_bullet_count();
 enum BULLET_LEV set_bullet_lev(int score);
+char* get_bullet_lev();
 
 extern DWORD last_spawn_ms;
 extern DWORD last_move_ms;
 extern Bullet bullets[YSIZE];
+static enum BULLET_LEV level = BULLET_LEV_MIN;

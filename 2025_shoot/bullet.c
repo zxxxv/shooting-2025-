@@ -10,7 +10,7 @@ int get_bullet_count() {
 }
 
 enum BULLET_LEV set_bullet_lev(int score) {
-    int k = score / 15;
+    int k = score / EXP;
     enum BULLET_LEV lev;
     switch (k) {
         case 0:
@@ -34,7 +34,7 @@ enum BULLET_LEV set_bullet_lev(int score) {
 
 int update_bullets(enum BULLET_LEV level) {
     DWORD now = GetTickCount();
-    int speed = level;
+    unsigned int speed = level;
     // level 마다 총알 생성
     if (now - last_spawn_ms >= speed) {
         if (bullet_count < YSIZE) {
@@ -63,10 +63,17 @@ int update_bullets(enum BULLET_LEV level) {
 
 void draw_bullets() {
     score = get_score();
-    enum BULLET_LEV level = set_bullet_lev(score);
+    level = set_bullet_lev(score);
     update_bullets(level);
     for (int i = 0; i < bullet_count; i++) {
         screen[bullets[i].y][bullets[i].x] = bullets[i].shape;
     }
 }
 
+
+
+char *get_bullet_lev() {
+    int i = level/50 - 2;
+    char* bullet_speed[] = { "V", "IV", "III", "II", "I" };
+    return bullet_speed[i];
+}

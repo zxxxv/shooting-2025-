@@ -13,6 +13,6 @@ int main() {
 		Sleep(20);
 	}
 	//atexit(rank);
-	rank();
+	if (rank()) return 1;
 	return 0;
 }

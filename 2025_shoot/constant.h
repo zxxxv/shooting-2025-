@@ -1,8 +1,10 @@
 #pragma once
 
-#define XSIZE	80			// 화면 가로 크기		80
-#define	YSIZE	45			// 세로 크기			45
-#define ENEMY_MAX 100
+#define XSIZE	    80			// 화면 가로 크기		80
+#define	YSIZE	    45			// 세로 크기			45
+#define ENEMY_MAX   999
+#define RANK_MAX    1000
+#define EXP         1
 
 enum BULLET_LEV {
     BULLET_LEV_MIN = 300,
@@ -11,3 +13,4 @@ enum BULLET_LEV {
     BULLET_LEV_HIGH = 150,
     BULLET_LEV_ULTRA = 100
 };
+

@@ -24,4 +24,3 @@ void deactive_shield();
 int get_shield_count();
 bool shield_status();
 void off_shield();
-//void set_shield_area();

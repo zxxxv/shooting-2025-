@@ -67,6 +67,7 @@ static int add_ranker() {
 	return 0;
 }
 
+// 사용 X
 static int find_index(Rankers *arr, int score, int start, int end) {
 	int mid, count;
 	count = end - start;
@@ -81,9 +82,17 @@ static int find_index(Rankers *arr, int score, int start, int end) {
 
 static int read_rankers() {
 	FILE* fp;
+	char buff[256];
+	int n, index;
 	fopen_s(&fp, "rank.txt", "r");
 	if (fp == NULL) return 1;
-	// TODO
+	while ((n = fread(buff, sizeof(char), 256, fp)) != 0) {
+		// 점수 int형으로 뱌꾸고 rankers에서 index 찾기
+		char *str = strtok(buff, "$");
+		index = atoi(str);
+		rankers[index];
+		// char * 이름 순서대로 리스트에 저장
+	}
 	fclose(fp);
 	return 0;
 }

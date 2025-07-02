@@ -24,7 +24,7 @@ int get_shield_count() {
 void active_shield() {
     shield.active = true;
     shield.count--;
-    set_shield_area();
+    //set_shield_area();
 }
 
 void deactive_shield() {
@@ -35,6 +35,7 @@ bool shield_status() {
     return shield.active;
 }
 
+// »ç¿ë X
 static void set_shield_area() {
     int x = player.x;
     int y = player.y;

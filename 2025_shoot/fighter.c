@@ -6,12 +6,16 @@ fighterA player = {
     .shape = '^'
 };
 
-Entity enemies[ENEMY_MAX];
+Entity enemies[ENEMY_MAX] = { 0 };
 
 static int death_count = 0;
 static int enemy_count = 0;
 
 static int kill_enemy();
+
+int get_enemy_count() {
+    return enemy_count;
+}
 
 void init_death_count() {
     death_count = DEATH_COUNT;

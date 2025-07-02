@@ -46,11 +46,7 @@ static int handle_input() {
 }
 
 static int handle_quit() {
-	//char *one;
-	//system("cls");
 	printf("\n 종료(q) 재시작(r)\t:");
-	//scanf("%c", one);
-	//if (!_kbhit()) return 0;
 	int c = _getch();
 	int r = 0;
 	if (c == 'q' || c == 'Q') {

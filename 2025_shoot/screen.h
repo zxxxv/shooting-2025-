@@ -11,5 +11,9 @@
 
 extern char screen[YSIZE][XSIZE];
 
+int init();
+int end();
 int start_screen();			// 화면 초기화
 int render_screen();		// 키 입력시 사용
+void hideConsoleCursor();
+void showConsoleCursor();

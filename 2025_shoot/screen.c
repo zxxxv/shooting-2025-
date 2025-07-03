@@ -5,6 +5,17 @@ static void clear_buffer();				// 화면 버퍼 초기화
 
 char screen[YSIZE][XSIZE];
 
+int init() {
+	srand((unsigned)time(NULL));
+	if (read_rankers()) return 1;
+	return 0;
+}
+
+int end() {
+	if (write_rankers()) return 1;
+	return 0;
+}
+
 static void clear_buffer() {
 	for (int y = 0; y < YSIZE; y++) {
 		for (int x = 0; x < XSIZE; x++) {
@@ -26,8 +37,8 @@ static int show_screen_whole() {
 	enum {
 		EXIT_LEN = sizeof(" exit: q\n") - 1,
 		RESTART_LEN = sizeof("\t restart: r\n") - 1,
-		SHIELD_LEN = sizeof("\n shield:999") - 1,							// 최대 3자리 수
-		DEATH_LEN = sizeof("\t\t\t    death_count:999") - 1,				// 최대 3자리 수
+		SHIELD_LEN = sizeof("\n shield:99") - 1,							// 최대 3자리 수
+		DEATH_LEN = sizeof("\t\t\t    death_count:99") - 1,				// 최대 3자리 수
 		SCORE_LEN = sizeof("\t\t      score:999\n") - 1,					// 최대 3자리 수
 		LEVEL_LEN = sizeof("\t\t\t\t\t       level:III")					
 	};
@@ -44,15 +55,15 @@ static int show_screen_whole() {
 	char* p = buf;
 
 	// shield_cout
-	int k = sprintf(p, "\n shield: %3d", get_shield_count());
+	int k = sprintf(p, "\n shield:%2d", get_shield_count());
 	p += k;
 
 	// death_cout
-	int d = sprintf(p, "\t\t\t    death_count: %3d", get_death_count());
+	int d = sprintf(p, "\t\t\t    death_count:%2d", get_death_count());
 	p += d;
 
 	// score
-	int s = sprintf(p, "\t\t      score: %3d\n", get_score());
+	int s = sprintf(p, "\t\t      score:%3d\n", get_score());
 	p += s;
 
 	for (int y = 0; y < YSIZE; y++) {
@@ -92,6 +103,7 @@ int render_screen() {
 }
 
 int start_screen() {
+	hideConsoleCursor();
 	set_player_position(XSIZE / 2, YSIZE - 2);
 	init_enemy();
 	init_death_count();
@@ -101,4 +113,20 @@ int start_screen() {
 	init_bullet();
 	render_screen();
 	return 0;
+}
+
+void hideConsoleCursor() {
+	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_CURSOR_INFO cursorInfo;
+	GetConsoleCursorInfo(hOut, &cursorInfo);
+	cursorInfo.bVisible = FALSE;
+	SetConsoleCursorInfo(hOut, &cursorInfo);
+}
+
+void showConsoleCursor() {
+	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_CURSOR_INFO cursorInfo;
+	GetConsoleCursorInfo(hOut, &cursorInfo);
+	cursorInfo.bVisible = TRUE;
+	SetConsoleCursorInfo(hOut, &cursorInfo);
 }

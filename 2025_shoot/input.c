@@ -46,7 +46,7 @@ static int handle_input() {
 }
 
 static int handle_quit() {
-	printf("\n 종료(q) 재시작(r)\t:");
+	printf("\n 종료(q) 재시작(r): ");
 	int c = _getch();
 	int r = 0;
 	if (c == 'q' || c == 'Q') {

@@ -7,16 +7,18 @@
 #include "skill.h"
 
 int main() {
-	init_rank();
+	init();
 	while (!quit) {
 		start_screen();
 		while (!game_over) {
 			input[quit | game_over]();
 			render_screen();
-			Sleep(20);
+			Sleep(16);
 		}
 		if (rank()) return 1;
 		input[quit | game_over]();
 	}
+	end();
 	return 0;
 }
+

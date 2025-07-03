@@ -100,7 +100,6 @@ void draw_enemy() {
 }
 
 void init_enemy() {
-    srand((unsigned)time(NULL));
     enemy_count = 0;
     for (int i = 0; i < enemy_count; i++) {
         enemies[i].alive = false;

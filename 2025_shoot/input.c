@@ -3,11 +3,12 @@
 static void key_skill();
 static int handle_input();
 static int handle_quit();
+static int handle_start();
 
 int game_over = 0;
 int quit = 0;
 
-int (*input[])() = { handle_input, handle_quit };
+int (*input[])() = { handle_input, handle_quit, handle_start };
 
 static int handle_input() {
 	while (1) {
@@ -57,6 +58,19 @@ static int handle_quit() {
 		init_game();
 		start_screen();
 	}
+	return 0;
+}
+
+static int handle_start() {
+	show_screen[0]();
+	/*printf("\n * choose you fighter to play*\n");
+	printf("\n1. ^  2. @  3. #  4. w  5. A  6. O  7. o\n");
+	printf("\ninput number: ");*/
+	// 선택 하면 실행
+	char c;
+	do c = _getch();
+	while (c < 49 || c > 49 + FIGHTER);
+	set_player(c-49);
 	return 0;
 }
 

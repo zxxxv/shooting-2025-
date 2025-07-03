@@ -17,3 +17,4 @@ int start_screen();			// 화면 초기화
 int render_screen();		// 키 입력시 사용
 void hideConsoleCursor();	// 커서 지우기
 void showConsoleCursor();	// 커서 보이기
+void (*show_screen[])();

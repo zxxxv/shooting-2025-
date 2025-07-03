@@ -26,6 +26,7 @@ extern Entity enemies[ENEMY_MAX];
 int set_player_position(int new_x, int new_y);
 int update_player(int dx, int dy);
 void draw_player();
+void set_player(int n);
 
 // 적 전투기
 void init_enemy();

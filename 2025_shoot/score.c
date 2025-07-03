@@ -1,34 +1,36 @@
 #include "score.h"
 
-typedef struct Node {
+typedef struct Ranker {
 	char name[32];
-	//int final_score;
-	struct Node* next;
-} Node;
+	struct Ranker* next;
+} Ranker;
 
 typedef struct Rankers {
 	int score;
-	struct Node* first;
+	struct Ranker* first;
 } Rankers;
 
-static int score = 0;
-static Rankers rankers[RANK_MAX];
+static int score = 0, rc = 0;
+static Rankers rankers[RANK_MAX] = { 0 };
 
 static int  add_ranker();
 static void show_rank();
 static Rankers* make_node(char* nick, int index);
 static int  find_index(Rankers* arr, int score, int start, int end);
-static int  read_rankers();
-static int  write_rankers();
 static int free_rankers();
+
+static void insertion_sort(Rankers* arr, int start, int end);
+static void quick_sort(Rankers* arr, int start, int end);
+static int partition(Rankers* arr, int start, int end);
+static void swap(Rankers* x, Rankers* y);
 
 int rank() {
 	char answer;
-	//if (read_rankers()) return 1;
+	showConsoleCursor();
 	while (1) {
 		system("cls");
-		printf(" *game over*\n");
-		printf("\n 현재 점수: %d\n", score);
+		printf("\n *game over*\n");
+		printf("\n score: %d\n", score);
 		printf("\n 점수를 등록 하시겠습니까(y/n)?: ");
 		scanf_s("%1c%*c", &answer, 1);
 		if (answer == 'y') {
@@ -43,13 +45,13 @@ int rank() {
 }
 
 static Rankers* make_node(char* nick, int index) {
-	Node* rank = malloc(sizeof(Node));
+	Ranker* rank = malloc(sizeof(Ranker));
 	if (rank == NULL) return (Rankers*)NULL;
 	strcpy_s(rank->name, strlen(nick)+1, nick);
 	rank->next = NULL;
 	if (!rankers[index].first) rankers[index].first = rank;
 	else {
-		Node* next = rankers[index].first;
+		Ranker* next = rankers[index].first;
 		rankers[index].first = rank;
 		rankers[index].first->next = next;
 	}
@@ -58,20 +60,25 @@ static Rankers* make_node(char* nick, int index) {
 
 static int add_ranker() {
 	char nick[32];
+	int is_sorted = 1;
 	printf("\n 등록할 이름을 적어주세요: ");
 	scanf_s("%31s%*c", nick, (unsigned)sizeof(nick));
 	int score = get_score();
-	//int index = find_index(rankers, score, 0, RANK_MAX);
-	if (!make_node(nick, score)) return 1;
-	//if (write_rankers()) return 2;
+	int index = find_index(rankers, score, 0, rc);
+	if (index == -1) {
+		index = rc;
+		rankers[rc++].score = score;
+		is_sorted = 0;
+	}
+	if (!make_node(nick, index)) return 1;
+	if (!is_sorted) insertion_sort(rankers, 0, rc);
 	return 0;
 }
 
-// 사용 X
 static int find_index(Rankers *arr, int score, int start, int end) {
 	int mid, count;
 	count = end - start;
-	if (count == 0) return start;
+	if (count == 0) return -1;
 	else {
 		mid = start + count / 2;
 		if (arr[mid].score == score) return mid;
@@ -80,42 +87,114 @@ static int find_index(Rankers *arr, int score, int start, int end) {
 	}
 }
 
-static int read_rankers() {
+static void insertion_sort(Rankers* arr, int start, int end) {
+	for (int i = start + 1; i < end; i++) {
+		Rankers key = arr[i];
+		int j = i - 1;
+		// key.score 보다 큰 요소들을 한 칸씩 뒤로 이동
+		while (j >= start && arr[j].score > key.score) {
+			arr[j + 1] = arr[j];
+			j--;
+		}
+		// 알맞은 위치에 key 삽입
+		arr[j + 1] = key;
+	}
+}
+
+static void quick_sort(Rankers *arr, int start, int end) {
+	if (end - start > 0) {
+		int q = partition(arr, start, end);
+		quick_sort(arr, start, q);
+		quick_sort(arr, q + 1, end);
+	}
+}
+
+static int partition(Rankers* arr, int start, int end) {
+	int p = arr[end - 1].score;
+	int i = start - 1;
+	for (int j = start; j < end - 1; j++)
+		if (arr[j].score < p) swap(&arr[++i], &arr[j]);
+	swap(&arr[i + 1], &arr[end - 1]);
+	return i + 1;
+}
+
+static void swap(Rankers* x, Rankers* y) {
+	Rankers temp;
+	temp = *x;
+	*x = *y;
+	*y = temp;
+}
+
+int read_rankers() {
 	FILE* fp;
-	char buff[256];
-	int n, index;
+	char name_buf[1024];
+	int scoreR, dcount = 0, same = 0;
+	char* name, * next_name;
 	fopen_s(&fp, "rank.txt", "r");
-	if (fp == NULL) return 1;
-	while ((n = fread(buff, sizeof(char), 256, fp)) != 0) {
-		// 점수 int형으로 뱌꾸고 rankers에서 index 찾기
-		char *str = strtok(buff, "$");
-		index = atoi(str);
-		rankers[index];
-		// char * 이름 순서대로 리스트에 저장
+	if (!fp) return 1;
+	while (fscanf_s(fp, "$%d$", &scoreR) == 1) {
+		if (fscanf_s(fp, "%1023[^$]", name_buf, (unsigned)sizeof(name_buf)) != 1) {
+			break;
+		}
+		// 같은 점수가 있는지 찾기
+		int idx = -1;
+		for (int i = 0; i < rc; i++) {
+			if (rankers[i].score == scoreR) {
+				idx = i;
+				break;
+			}
+		}
+		// 중복이면 기존 idx에, 아니면 새 n에
+		if (idx < 0) {
+			if (rc >= RANK_MAX) {
+				fprintf(stderr, "랭킹 최대치(%d) 초과\n", RANK_MAX);
+				break;
+			}
+			idx = rc;
+			rankers[idx].score = scoreR;
+			rc++;
+		}
+		name = strtok_s(name_buf, ":", &next_name);
+		while (name) {
+			if (*name) make_node(name, idx);
+			name = strtok_s(NULL, ":", &next_name);
+		}
 	}
 	fclose(fp);
+	quick_sort(rankers, 0, rc);
 	return 0;
 }
 
-static int write_rankers() {
+int write_rankers() {
 	FILE* fp;
 	fopen_s(&fp, "rank.txt", "w");
 	if (fp == NULL) return 1;
-	// TODO
+	for (int i = 0; i < rc; i++) {
+		fprintf(fp, "$%d$", rankers[i].score);
+		Ranker* cur = rankers[i].first;
+		while (cur) {
+			fprintf(fp, "%s:", cur->name);
+			cur = cur->next;
+		}
+	}
+	fputc('\n', fp);
 	fclose(fp);
+	free_rankers();
 	return 0;
 }
 
 static int free_rankers() {
-	// TODO
-	return 0;
-}
-
-void init_rank() {
-	for (int i = 0; i < RANK_MAX; i++) {
-		rankers[i].score = i;
-		rankers[i].first = (Node *)NULL;
+	Ranker* cur, * next;
+	for (int i = 0; i < rc; i++) {
+		cur = rankers[i].first;
+		while (cur) {
+			next = cur->next;
+			free(cur);
+			cur = next;
+		}
+		rankers[i].first = NULL;
 	}
+	return 0;
 }
 
 static void show_rank() {
@@ -125,12 +204,12 @@ static void show_rank() {
 	for (int i = 1; i <= RANK_MAX; i++) {
 		if (!rankers[RANK_MAX - i].first) continue;
 		else {
-			Node* head, *next;
+			Ranker* head, *next;
 			head = rankers[RANK_MAX - i].first;
 			next = head->next;
-			printf("\n %d. [%d] ", seq++, rankers[RANK_MAX - i].score);
+			printf("\n == Score: %d ==\n", rankers[RANK_MAX - i].score);
 			while (head != NULL) {
-				printf("*%s* ", head->name);
+				printf(" * %s *\n", head->name);
 				if (!next) break;
 				head = next;
 				next = head->next;

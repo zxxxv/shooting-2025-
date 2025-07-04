@@ -17,3 +17,5 @@ enum BULLET_LEV {
 #define DEATH_COUNT         5           // 데카 수
 #define RANK_MAX            1000        // 랭커 점수 배열
 #define FIGHTER             7           // 전투기 수
+#define ITEM_PLUS           4           // 아이템 +
+#define ITEM_EQUAL          2           // 아이템 =

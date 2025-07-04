@@ -8,7 +8,7 @@ fighterA player = {
 
 Entity enemies[ENEMY_MAX] = { 0 };
 
-char fighter[7] = { '^', '@', '#', 'w', 'A', 'O', 'o' };
+static char fighter[7] = { '^', '@', '#', 'w', 'A', 'O', 'o' };
 static int death_count = 0;
 static int enemy_count = 0;
 

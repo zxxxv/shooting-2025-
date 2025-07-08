@@ -3,8 +3,8 @@
 // ½¯µå
 Shield shield = {
     .active = FALSE,
-    .shape1 = '*',
-    .shape2 = '!',
+    .shape1 = '=',
+    .shape2 = '|',
     .count = SHIELD_COUNT,
     .areaX[1][1] = 0,
     .areaY[1][1] = 0

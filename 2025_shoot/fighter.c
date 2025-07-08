@@ -128,9 +128,8 @@ void init_enemy() {
 }
 
 static int kill_enemy() {
-    //int bcount = get_bullet_count();
     int lvl = get_level();
-    int bcount = BulletManagers[lvl].count;
+    int bcount = (int)BulletManagers[lvl].count;
     Bullet* buf = BulletManagers[lvl].buf;
     for (int i = 0; i < enemy_count; ) {
         // 총알 충돌 검사
@@ -161,6 +160,8 @@ static int kill_enemy() {
         if (collision) {
             if (shield.active) {
                 off_shield_at(i);
+                add_score();
+                check_exp();
                 continue;
             }
             else {

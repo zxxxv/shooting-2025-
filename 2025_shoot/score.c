@@ -29,9 +29,10 @@ int rank() {
 	char answer;
 	show_console_cursor();
 	while (1) {
-		printf("\033[2J\033[H");
-		printf("\n\033[1;35m* game over *\033[0m\n");
-		printf("\n score: %d\n", score);
+		system("cls");
+		//printf("\033[2J\033[H");
+		printf("\n\033[1;32m * game over *\033[0m\n");
+		printf("\n\033[1;35m score: %d\033[0m\n", score);
 		printf("\n 점수를 등록 하시겠습니까(y/n)?: ");
 		scanf_s("%1c%*c", &answer, 1);
 		if (answer == 'y') {

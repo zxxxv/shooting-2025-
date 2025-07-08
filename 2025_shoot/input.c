@@ -20,7 +20,7 @@ static int handle_input() {
 			break;
 		}
 		if (c == 'r' || c == 'R') {
-			printf("\033[2J\033[H");
+			//printf("\033[2J\033[H");
 			start_screen();
 		}
 		if (c == 32) key_skill();
@@ -56,7 +56,8 @@ static int handle_quit() {
 		quit_game();
 	}
 	if (c == 'r' || c == 'R') {
-		printf("\033[2J\033[H");
+		system("cls");
+		//printf("\033[2J\033[H");
 		init_game();
 		start_screen();
 	}
@@ -64,8 +65,9 @@ static int handle_quit() {
 }
 
 static int handle_start() {
-	show_screen[0]();
+	system("cls");
 	hide_console_cursor();
+	show_screen[0]();
 	char c;
 	do c = _getch();
 	while (c < 49 || c > 49 + FIGHTER);

@@ -7,11 +7,11 @@ Bullet bullets_ultra[3*YSIZE];
 static BULLET_SPEED speed = BULLET_SPEED_MIN;
 static BULLET_LEVEL level = BULLET_LEVEL_DEFAULT;
 
-static BULLET_SPEED set_bullet_speed(int x);                        // 속도 설정
-static BULLET_LEVEL set_bullet_level(int e);               // 레벨 설정
-static void update_default(BulletClass* self, BULLET_SPEED sp);       // 총알 한칸 올라가기, y좌표--, 화면 밖으로 나간 총알 제거
-static void update_medium(BulletClass* self, BULLET_SPEED sp);        // + 대각 방향
-static void update_ultra(BulletClass* self, BULLET_SPEED sp);         // + 전방 3줄
+static BULLET_SPEED set_bullet_speed(int x);                          // 속도 설정
+static BULLET_LEVEL set_bullet_level(int e);                          // 레벨 설정
+static void update_default(BulletClass* self, BULLET_SPEED sp);       // 기본 한줄
+static void update_medium(BulletClass* self, BULLET_SPEED sp);        // 대각 양방향
+static void update_ultra(BulletClass* self, BULLET_SPEED sp);         // 전방 3줄
 
 BulletClass BulletManagers[LEVEL_COUNT] = {
     { bullets_default,  YSIZE, 0, 0, 0, update_default },
@@ -53,7 +53,7 @@ static enum BULLET_LEVEL set_bullet_level(int e) {
 
 static void update_default(BulletClass* self, BULLET_SPEED sp) {
     Timestamp now = get_time_ms();
-    // 스폰 타이밍 & 용량 체크
+    // 스폰 타이밍, 용량 체크
     if (now - self->last_spawn_ms >= (unsigned)sp && self->count < self->capacity) {
         self->buf[self->count++] = (Bullet){
             .x = player.x,
@@ -62,20 +62,17 @@ static void update_default(BulletClass* self, BULLET_SPEED sp) {
         };
         self->last_spawn_ms = now;
     }
-
-    // 이동 타이밍
+    // 이동
     if (now - self->last_move_ms >= MOVE_INTERVAL_MS) {
         for (Index i = 0; i < self->count; ) {
             Bullet* b = &self->buf[i];
             b->y--;
             if (b->y < 1)
-                // 화면 밖으로 나간 총알은 마지막 요소와 교체 후 카운트 감소
                 self->buf[i] = self->buf[--self->count];
             else i++;
         }
         self->last_move_ms = now;
     }
-
     // 렌더링
     for (Index i = 0; i < self->count; i++) {
         Bullet* b = &self->buf[i];
@@ -85,8 +82,7 @@ static void update_default(BulletClass* self, BULLET_SPEED sp) {
 
 static void update_medium(BulletClass* self, BULLET_SPEED sp) {
     Timestamp now = get_time_ms();
-
-    // 스폰 타이밍 & 용량 체크 (대각선 2발)
+    // 스폰 타이밍, 용량 체크 (대각선 2발)
     if (now - self->last_spawn_ms >= (unsigned)sp && self->count + 2 <= self->capacity) {
         // 좌/우 대각선 발사
         for (int dx = -1; dx <= 1; dx += 2) {
@@ -100,22 +96,18 @@ static void update_medium(BulletClass* self, BULLET_SPEED sp) {
         }
         self->last_spawn_ms = now;
     }
-
-    // 이동 타이밍
+    // 이동
     if (now - self->last_move_ms >= MOVE_INTERVAL_MS) {
         for (Index i = 0; i < self->count; ) {
             Bullet* b = &self->buf[i];
             b->x += b->dx;
             b->y += b->dy;
-
-            // 화면 밖이면 삭제
             if (b->y < 1 || b->x < 1 || b->x >= XSIZE - 1)
                 self->buf[i] = self->buf[--self->count];
             else i++;
         }
         self->last_move_ms = now;
     }
-
     // 렌더링
     for (Index i = 0; i < self->count; i++) {
         Bullet* b = &self->buf[i];
@@ -125,7 +117,7 @@ static void update_medium(BulletClass* self, BULLET_SPEED sp) {
 
 static void update_ultra(BulletClass* self, BULLET_SPEED sp) {
     Timestamp now = get_time_ms();
-    // 스폰 타이밍 & 용량 체크
+    // 스폰 타이밍, 용량 체크
     if (now - self->last_spawn_ms >= (unsigned)sp && self->count < self->capacity) {
         // 전방 3발 발사
         for (int dx = -1; dx <= 1; dx++) {
@@ -140,8 +132,7 @@ static void update_ultra(BulletClass* self, BULLET_SPEED sp) {
         }
         self->last_spawn_ms = now;
     }
-
-    // 이동 타이밍
+    // 이동
     if (now - self->last_move_ms >= MOVE_INTERVAL_MS) {
         for (Index i = 0; i < self->count; ) {
             Bullet* b = &self->buf[i];
@@ -152,7 +143,6 @@ static void update_ultra(BulletClass* self, BULLET_SPEED sp) {
         }
         self->last_move_ms = now;
     }
-
     // 렌더링
     for (Index i = 0; i < self->count; i++) {
         Bullet* b = &self->buf[i];

@@ -26,15 +26,15 @@ typedef enum {
 typedef struct Bullet {
 	int x, y;
     int dx, dy;     // 이동 벡터
-	char shape;		// '+'
+	char shape;		// '+' , '=', '*'
 } Bullet;
 
 typedef struct BulletClass {
-    Bullet*         buf;             // bullets_default, bullets_medium, bullets_ultra 중 하나
-    Index             capacity;       // YSIZE
-    Index             count;          // 현재 발사된 총알 수
-    Timestamp   last_spawn_ms;
-    Timestamp   last_move_ms;
+    Bullet*         buf;            // bullets_default, bullets_medium, bullets_ultra 중 하나
+    Index           capacity;       // YSIZE
+    Index           count;          // 현재 발사된 총알 수
+    Timestamp       last_spawn_ms;  // 최근 생성 시간
+    Timestamp       last_move_ms;   // 최근 이동 시간
 
     void (*update)(struct BulletClass* self, BULLET_SPEED sp);
 } BulletClass;
@@ -45,6 +45,6 @@ void draw_bullets();							// 버퍼에 모든 총알 찍기
 char* get_bullet_speed();
 char* get_bullet_level();
 void init_bullets();                            // 총알 초기화
-int get_level();
+int get_level();                                // 총알 레벨 반환
 
 unsigned long get_time_ms();					//

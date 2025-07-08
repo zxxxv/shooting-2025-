@@ -11,7 +11,6 @@ Shield shield = {
 };
 
 static void set_shield_area();
-static void off_shield();
 
 void init_shield_count() {
     shield.count = SHIELD_COUNT;
@@ -59,20 +58,10 @@ void draw_skill() {
     screen[y][x - 1] = shield.shape2;
     screen[y + 1][x - 1] = shield.shape1;
     screen[y + 1][x] = shield.shape1;
-    off_shield();
+    //off_shield();
 }
 
-static void off_shield(void) {
-    int px = player.x, py = player.y;
-    int ecount = get_enemy_count();
-    for (int i = 0; i < ecount; i++) {
-        if (!enemies[i].alive) continue;
-        int dx = enemies[i].x - px;
-        int dy = enemies[i].y - py;
-        if (abs(dx) <= 1 && abs(dy) <= 1) {
-            enemies[i].alive = FALSE;
-            deactive_shield();
-            return;
-        }
-    }
+void off_shield_at(int idx) {
+    enemies[idx] = enemies[--enemy_count];
+    deactive_shield();
 }

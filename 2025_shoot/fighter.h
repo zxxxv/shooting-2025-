@@ -20,6 +20,7 @@ typedef struct Entity {
 
 extern fighterA player;
 extern Entity enemies[ENEMY_MAX];
+extern enemy_count;
 
 // 플레이어 전투기
 int set_player_position(int new_x, int new_y);
@@ -30,7 +31,6 @@ void set_player(int n);
 // 적 전투기
 void init_enemy();
 void spawn_enemy();
-void update_enemy();
 void draw_enemy();
 int get_enemy_count();
 

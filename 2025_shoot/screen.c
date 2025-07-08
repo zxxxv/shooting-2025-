@@ -79,10 +79,11 @@ static int show_screen_whole() {
 	enum {
 		EXIT_LEN = sizeof(" exit: q\n") - 1,
 		RESTART_LEN = sizeof("\t restart: r\n") - 1,
-		SHIELD_LEN = sizeof("\n shield:99") - 1,							// 최대 3자리 수
-		DEATH_LEN = sizeof("\t\t\t    death_count:99") - 1,					// 최대 3자리 수
+		SHIELD_LEN = sizeof("\n shield:99") - 1,							// 최대 2자리 수
+		DEATH_LEN = sizeof("\t\t\t    death_count:99") - 1,					// 최대 2자리 수
 		SCORE_LEN = sizeof("\t\t      score:999\n") - 1,					// 최대 3자리 수
-		LEVEL_LEN = sizeof("\t\t\t\t\t       level:III")					
+		SPEED_LEN = sizeof("\t\t       speed:III"),
+		LEVEL_LEN = sizeof("\t\t      level:III\n")
 	};
 	static char buf[
 		SHIELD_LEN +
@@ -91,6 +92,7 @@ static int show_screen_whole() {
 		RESTART_LEN +
 		DEATH_LEN +
 		SCORE_LEN +
+		SPEED_LEN +
 		LEVEL_LEN
 	];
 	char* p = buf;
@@ -115,8 +117,11 @@ static int show_screen_whole() {
 	memcpy(p, "\t restart: r", RESTART_LEN);
 	p += RESTART_LEN;
 	// bullet speed
-	int b = sprintf(p, "\t\t\t\t\t       level:%3s\n", get_bullet_lev());
+	int b = sprintf(p, "\t\t      speed:%3s", get_bullet_speed());
 	p += b;
+
+	int l = sprintf(p, "\t\t      level:%3s\n", get_bullet_level());
+	p += l;
 	fwrite(buf, 1, p - buf, stdout);
 	fflush(stdout);
 	return 0;
@@ -144,6 +149,7 @@ int start_screen() {
 	init_score();
 	deactive_shield();
 	init_bullet();
+	init_item();
 	render_screen();
 	return 0;
 }

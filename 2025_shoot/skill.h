@@ -22,4 +22,4 @@ void active_shield();
 void deactive_shield();
 int get_shield_count();
 bool_t shield_status();
-void off_shield();
+void off_shield_at(int idx);

@@ -20,6 +20,7 @@ static int handle_input() {
 			break;
 		}
 		if (c == 'r' || c == 'R') {
+			printf("\033[2J\033[H");
 			start_screen();
 		}
 		if (c == 32) key_skill();
@@ -47,6 +48,7 @@ static int handle_input() {
 }
 
 static int handle_quit() {
+	hide_console_cursor();
 	printf("\n 종료(q)  재시작(r)\n");
 	int c = _getch();
 	int r = 0;

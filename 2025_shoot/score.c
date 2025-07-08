@@ -10,7 +10,8 @@ typedef struct Rankers {
 	struct Ranker* first;
 } Rankers;
 
-static int score = 0, rc = 0;
+static int score = 0, rc = 0;					// rc -> rank count : Rankers 배열에 채워진 수
+static bool_t dirty = 0;						// 추가 랭커 있는지 표시
 static Rankers rankers[RANK_MAX] = { 0 };
 
 static int  add_ranker();
@@ -35,6 +36,7 @@ int rank() {
 		scanf_s("%1c%*c", &answer, 1);
 		if (answer == 'y') {
 			if (add_ranker()) return 1;
+			dirty = 1;
 			show_rank();
 			break;
 		}
@@ -166,6 +168,7 @@ int read_rankers() {
 }
 
 int write_rankers() {
+	if (!dirty) return 0;
 	FILE* fp;
 	fopen_s(&fp, "rank.txt", "w");
 	if (fp == NULL) return 1;

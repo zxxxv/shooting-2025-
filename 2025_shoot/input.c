@@ -54,7 +54,7 @@ static int handle_quit() {
 		quit_game();
 	}
 	if (c == 'r' || c == 'R') {
-		system("cls");
+		printf("\033[2J\033[H");
 		init_game();
 		start_screen();
 	}
@@ -63,6 +63,7 @@ static int handle_quit() {
 
 static int handle_start() {
 	show_screen[0]();
+	hide_console_cursor();
 	char c;
 	do c = _getch();
 	while (c < 49 || c > 49 + FIGHTER);

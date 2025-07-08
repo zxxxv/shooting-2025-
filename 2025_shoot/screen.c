@@ -36,7 +36,7 @@ static void clear_buffer() {
 	}
 }
 
-static int show_choose_screen(void) {
+static int show_choose_screen() {
 	const char* header = "   SHOOT  2025   ";
 	const char* title = " * choose your fighter to play * ";
 	const char* options = " [1] ^  [2] #  [3] w  [4] A  ";
@@ -47,10 +47,7 @@ static int show_choose_screen(void) {
 	int win_h = 9;
 	int x0 = (XSIZE - win_w) / 2;
 	int y0 = (YSIZE - win_h) / 2;
-	// 화면 클리어 & 커서 숨기기
-	printf("\033[2J\033[H");   // clear + home
-	printf("\033[?25l");       // hide cursor
-	// ── 테두리 그리기 ──
+	// 테두리 그리기
 	for (int y = 0; y < win_h; y++) {
 		printf("\033[%d;%dH", y0 + y - 1, x0 + 1);
 		if (y == 0 || y == win_h - 1) {
@@ -62,15 +59,15 @@ static int show_choose_screen(void) {
 			putchar('|');
 		}
 	}
-	// ── 헤더 출력 ──
+	// 헤더 출력
 	int hx = x0 + (win_w - (int)strlen(header)) / 2 + 1;
 	int hy = y0 + 1;
 	printf("\033[%d;%dH\033[1;35m%s\033[0m", hy, hx, header);
-	// ── 제목 출력 ──
+	// 제목 출력
 	int tx = x0 + (win_w - (int)strlen(title)) / 2 + 1;
 	int ty = y0 + 3;
 	printf("\033[%d;%dH\033[1;33m%s\033[0m", ty, tx, title);
-	// ── 옵션 출력 ──
+	// 옵션 출력
 	int ox = x0 + (win_w - (int)strlen(options)) / 2 + 1;
 	int oy = y0 + 5;
 	printf("\033[%d;%dH\033[1;36m%s\033[0m", oy, ox, options);
@@ -126,21 +123,20 @@ static int show_screen_whole() {
 }
 
 int render_screen() {
-	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-	COORD home = { 0, 0 };
-	SetConsoleCursorPosition(hOut, home);
+	printf("\033[H");
 	clear_buffer();
 	draw_bullets();
 	draw_enemy();
 	draw_skill();
 	draw_player();
 	show_screen_whole();
+	fflush(stdout);
 	return 0;
 }
 
 int start_screen() {
-	system("cls");
-	hideConsoleCursor();
+	printf("\033[2J\033[H");
+	hide_console_cursor();
 	set_player_position(XSIZE / 2, YSIZE - 2);
 	init_enemy();
 	init_death_count();
@@ -152,18 +148,12 @@ int start_screen() {
 	return 0;
 }
 
-void hideConsoleCursor() {
-	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-	CONSOLE_CURSOR_INFO cursorInfo;
-	GetConsoleCursorInfo(hOut, &cursorInfo);
-	cursorInfo.bVisible = FALSE;
-	SetConsoleCursorInfo(hOut, &cursorInfo);
+void hide_console_cursor() {
+	printf("\033[?25l");
+	fflush(stdout);
 }
 
-void showConsoleCursor() {
-	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-	CONSOLE_CURSOR_INFO cursorInfo;
-	GetConsoleCursorInfo(hOut, &cursorInfo);
-	cursorInfo.bVisible = TRUE;
-	SetConsoleCursorInfo(hOut, &cursorInfo);
+void show_console_cursor() {
+	printf("\033[?25h");
+	fflush(stdout);
 }

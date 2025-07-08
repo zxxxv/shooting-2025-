@@ -26,10 +26,10 @@ static void swap(Rankers* x, Rankers* y);
 
 int rank() {
 	char answer;
-	showConsoleCursor();
+	show_console_cursor();
 	while (1) {
-		system("cls");
-		printf("\n *game over*\n");
+		printf("\033[2J\033[H");
+		printf("\n\033[1;35m* game over *\033[0m\n");
 		printf("\n score: %d\n", score);
 		printf("\n 점수를 등록 하시겠습니까(y/n)?: ");
 		scanf_s("%1c%*c", &answer, 1);
@@ -133,7 +133,7 @@ int read_rankers() {
 	fopen_s(&fp, "rank.txt", "r");
 	if (!fp) return 1;
 	while (fscanf_s(fp, "$%d$", &scoreR) == 1) {
-		if (fscanf_s(fp, "%1023[^$]", name_buf, (unsigned)sizeof(name_buf)) != 1) {
+		if (fscanf_s(fp, "%1023[^\r\n$]", name_buf, (unsigned)sizeof(name_buf)) != 1) {
 			break;
 		}
 		// 같은 점수가 있는지 찾기
@@ -198,7 +198,7 @@ static int free_rankers() {
 }
 
 static void show_rank() {
-	system("cls");
+	printf("\033[2J\033[H");
 	printf("\n *Rank*\n");
 	int seq = 1;
 	for (int i = 1; i <= RANK_MAX; i++) {

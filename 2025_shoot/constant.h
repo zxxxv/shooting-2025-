@@ -9,8 +9,10 @@ enum BULLET_LEV {
     BULLET_LEV_ULTRA = 100
 };
 
+typedef enum { BOOL_FALSE = 0, BOOL_TRUE = 1 } bool_t;
+
 #define XSIZE               80			// 화면 가로 크기		80
-#define	YSIZE               20			// 세로 크기			45
+#define	YSIZE               45			// 세로 크기			45
 #define ENEMY_MAX           999         // 적기 최대 생성 수
 #define EXP                 20          // 레벨업 경험치
 #define SHIELD_COUNT        5           // 쉴드 개수
@@ -19,3 +21,10 @@ enum BULLET_LEV {
 #define FIGHTER             4           // 전투기 수
 #define ITEM_PLUS           4           // 아이템 +
 #define ITEM_EQUAL          2           // 아이템 =
+#define TRUE  BOOL_TRUE
+#define FALSE BOOL_FALSE
+
+#define MS_PER_SEC         1000UL
+#define MOVE_INTERVAL_MS    50UL  /* 0.05초 */
+
+

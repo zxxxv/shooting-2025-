@@ -1,10 +1,10 @@
 #include <stdlib.h>
-#include <windows.h>
 #include "fighter.h"
 #include "screen.h"
 #include "input.h"
 #include "score.h"
 #include "skill.h"
+#include "windows.h"
 
 int main() {
 	init();

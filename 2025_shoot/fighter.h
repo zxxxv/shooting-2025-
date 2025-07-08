@@ -1,8 +1,6 @@
 #pragma once
 #include <stdlib.h>
-#include <windows.h>
 #include <time.h>
-#include <stdbool.h>
 #include "screen.h"
 #include "constant.h"
 #include "bullet.h"
@@ -16,7 +14,7 @@ typedef struct fighterA {
 typedef struct Entity {
 	int x, y;
 	char shape;		// 'V'
-	bool alive;		
+	bool_t alive;		
 	//char attack;	// '#'
 } Entity;
 
@@ -36,7 +34,7 @@ void update_enemy();
 void draw_enemy();
 int get_enemy_count();
 
-// 单墨
+// 单胶 墨款飘(格见)
 void init_death_count();
 int minus_death_count();
 int get_death_count();

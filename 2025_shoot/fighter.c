@@ -1,10 +1,6 @@
 #include "fighter.h"
 
-fighterA player = {
-    .x = 1,
-    .y = 1,
-    .shape = '^'
-};
+fighterA player = { 1, 1, '^' };
 
 Entity enemies[ENEMY_MAX] = { 0 };
 
@@ -68,34 +64,34 @@ void spawn(int n) {
 static void spawn_enemy() {
     if (enemy_count >= ENEMY_MAX) return;
     int x_spawn = (rand() % (XSIZE - 2)) + 1;
-    enemies[enemy_count++] = (Entity){
-        .x = x_spawn,
-        .y = 1,
-        .shape = 'V',
-        .alive = true
-    };
+    Entity e;
+    e.x = x_spawn;
+    e.y = 1;
+    e.shape = 'v';
+    e.alive = TRUE;
+    enemies[enemy_count++] = e;
 }
 
 void update_enemy() {
-    static DWORD last_spawn = 0;
-    static DWORD last_move = 0;
-    DWORD now = GetTickCount();
+    static unsigned long last_spawn = 0UL;
+    static unsigned long last_move = 0UL;
+    unsigned long now = get_time_ms();
 
     // 1초마다 적 생성
-    if (now - last_spawn >= 1000) {
+    if (now - last_spawn >= 1000UL) {
         spawn_enemy();
         //spawn(now%100);
         last_spawn = now;
     }
     
     // 모든 적을 한 칸 아래로 이동
-    if (now - last_move >= 500) {
+    if (now - last_move >= 500UL) {
         for (int i = 0; i < enemy_count; i++) {
             if (!enemies[i].alive) continue;
             enemies[i].y += 1;
             // 화면 밖으로 나가면 비활성화
             if (enemies[i].y >= YSIZE - 1)
-                enemies[i].alive = false;
+                enemies[i].alive = FALSE;
         }
         last_move = now;
     }
@@ -109,7 +105,7 @@ void draw_enemy() {
     update_enemy();
     kill_enemy();
     for (int i = 0; i < enemy_count; i++) {
-        if (enemies[i].alive == true)
+        if (enemies[i].alive == TRUE)
             screen[enemies[i].y][enemies[i].x] = enemies[i].shape;
     }
 }
@@ -117,7 +113,7 @@ void draw_enemy() {
 void init_enemy() {
     enemy_count = 0;
     for (int i = 0; i < enemy_count; i++) {
-        enemies[i].alive = false;
+        enemies[i].alive = FALSE;
     }
 }
 
@@ -131,7 +127,7 @@ static int kill_enemy() {
         }
         for (int j = 0; j < bcount; j++) {
             if (bullets[j].x == enemies[i].x && bullets[j].y == enemies[i].y) {
-                enemies[i].alive = false;
+                enemies[i].alive = FALSE;
                 add_score();
             }
         }

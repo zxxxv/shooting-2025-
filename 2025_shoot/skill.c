@@ -2,7 +2,7 @@
 
 // ½¯µå
 Shield shield = {
-    .active = false,
+    .active = FALSE,
     .shape1 = '*',
     .shape2 = '!',
     .count = SHIELD_COUNT,
@@ -22,16 +22,16 @@ int get_shield_count() {
 }
 
 void active_shield() {
-    shield.active = true;
+    shield.active = TRUE;
     shield.count--;
     //set_shield_area();
 }
 
 void deactive_shield() {
-    shield.active = false;
+    shield.active = FALSE;
 }
 
-bool shield_status() {
+bool_t shield_status() {
     return shield.active;
 }
 
@@ -48,7 +48,7 @@ static void set_shield_area() {
 }
 
 void draw_skill() {
-    if (shield.active == false) return;
+    if (shield.active == FALSE) return;
     int x = player.x;
     int y = player.y;
     screen[y + 1][x + 1] = shield.shape1;
@@ -70,7 +70,7 @@ static void off_shield(void) {
         int dx = enemies[i].x - px;
         int dy = enemies[i].y - py;
         if (abs(dx) <= 1 && abs(dy) <= 1) {
-            enemies[i].alive = false;
+            enemies[i].alive = FALSE;
             deactive_shield();
             return;
         }

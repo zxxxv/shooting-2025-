@@ -1,5 +1,5 @@
 #pragma once
-#include <windows.h>
+//#include <windows.h>
 #include <time.h>
 #include "constant.h"
 #include "input.h"
@@ -17,4 +17,4 @@ int get_bullet_count();
 enum BULLET_LEV set_bullet_lev(int score);		// 속도 설정
 char* get_bullet_lev();
 void init_bullet();								// 총알 초기화
-
+unsigned long get_time_ms();					//

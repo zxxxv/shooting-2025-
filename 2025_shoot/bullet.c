@@ -13,9 +13,7 @@ int get_bullet_count() {
 }
 
 enum BULLET_LEV set_bullet_lev(int score) {
-    int k = score / EXP;
-    // 아이템 생성하기
-    //spawn_item();
+    int k = score / EXP;    
     enum BULLET_LEV lev;
     switch (k) {
         case 0:

@@ -6,6 +6,7 @@
 #include "screen.h"
 #include "constant.h"
 #include "bullet.h"
+#include "item.h"
 
 typedef struct fighterA {
 	int x, y;

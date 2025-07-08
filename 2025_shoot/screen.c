@@ -39,7 +39,7 @@ static void clear_buffer() {
 static int show_choose_screen(void) {
 	const char* header = "   SHOOT  2025   ";
 	const char* title = " * choose your fighter to play * ";
-	const char* options = " [1] ^  [2] @  [3] #  [4] w  [5] A  [6] O  [7] o ";
+	const char* options = " [1] ^  [2] #  [3] w  [4] A  ";
 	int content_w = (int)strlen(header);
 	if ((int)strlen(title) > content_w) content_w = (int)strlen(title);
 	if ((int)strlen(options) > content_w) content_w = (int)strlen(options);

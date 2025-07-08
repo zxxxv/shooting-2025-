@@ -8,11 +8,11 @@ fighterA player = {
 
 Entity enemies[ENEMY_MAX] = { 0 };
 
-static char fighter[7] = { '^', '@', '#', 'w', 'A', 'O', 'o' };
+static char fighter[7] = { '^', '#', 'w', 'A' };
 static int death_count = 0;
 static int enemy_count = 0;
-
 static int kill_enemy();
+static void spawn_enemy();
 
 void set_player(int n) {
     player.shape = fighter[n];
@@ -60,7 +60,12 @@ void draw_player() {
     screen[player.y][player.x] = player.shape;
 }
 
-void spawn_enemy() {
+void spawn(int n) {
+    if (!n) spawn_enemy();
+    else spawn_item();
+}
+
+static void spawn_enemy() {
     if (enemy_count >= ENEMY_MAX) return;
     int x_spawn = (rand() % (XSIZE - 2)) + 1;
     enemies[enemy_count++] = (Entity){
@@ -79,11 +84,12 @@ void update_enemy() {
     // 1초마다 적 생성
     if (now - last_spawn >= 1000) {
         spawn_enemy();
+        //spawn(now%100);
         last_spawn = now;
     }
-
+    
+    // 모든 적을 한 칸 아래로 이동
     if (now - last_move >= 500) {
-        // 모든 적을 한 칸 아래로 이동
         for (int i = 0; i < enemy_count; i++) {
             if (!enemies[i].alive) continue;
             enemies[i].y += 1;
@@ -93,6 +99,10 @@ void update_enemy() {
         }
         last_move = now;
     }
+
+    // 아이템 생성하기
+    //int score = get_score();
+    //if ((score % EXP) == 0) spawn_item();
 }
 
 void draw_enemy() {

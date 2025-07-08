@@ -1,20 +1,26 @@
 #include "bullet.h"
 
-Bullet bullets[YSIZE];
-static unsigned long last_spawn_ms = 0UL;
-static unsigned long last_move_ms = 0UL;
-static enum BULLET_SPEED speed = BULLET_SPEED_MIN;
-static enum BULLET_LEVEL level = BULLET_LEVEL_DEFAULT;
-static int bullet_count = 0;
+Bullet bullets_default[YSIZE];
+Bullet bullets_medium[2*YSIZE];
+Bullet bullets_ultra[3*YSIZE];
 
-static void init_bullet_speed();
-static void init_bullet_level();
-static enum BULLET_SPEED set_bullet_speed(int x);       // 속도 설정
-static enum BULLET_LEVEL set_bullet_level(int e);       // 레벨 설정
-static int update_bullets(enum BULLET_SPEED sp);        // 총알 한칸 올라가기, y좌표--, 화면 밖으로 나간 총알 제거
+static BULLET_SPEED speed = BULLET_SPEED_MIN;
+static BULLET_LEVEL level = BULLET_LEVEL_DEFAULT;
 
-int get_bullet_count() {
-    return bullet_count;
+static BULLET_SPEED set_bullet_speed(int x);                        // 속도 설정
+static BULLET_LEVEL set_bullet_level(int e);               // 레벨 설정
+static void update_default(BulletClass* self, BULLET_SPEED sp);       // 총알 한칸 올라가기, y좌표--, 화면 밖으로 나간 총알 제거
+static void update_medium(BulletClass* self, BULLET_SPEED sp);        // + 대각 방향
+static void update_ultra(BulletClass* self, BULLET_SPEED sp);         // + 전방 3줄
+
+BulletClass BulletManagers[LEVEL_COUNT] = {
+    { bullets_default,  YSIZE, 0, 0, 0, update_default },
+    { bullets_medium,   2 * YSIZE, 0, 0, 0, update_medium  },
+    { bullets_ultra,    3 * YSIZE, 0, 0, 0, update_ultra   },
+};
+
+int get_level() {
+    return level;
 }
 
 unsigned long get_time_ms() {
@@ -45,41 +51,125 @@ static enum BULLET_LEVEL set_bullet_level(int e) {
     return lev;
 }
 
-static int update_bullets(enum BULLET_SPEED sp) {
-    unsigned long now = get_time_ms();
-    unsigned int speed = (unsigned int)sp;
-    if (now - last_spawn_ms >= speed) {
-        if (bullet_count < YSIZE) {
-            Bullet b;
-            b.x = player.x;
-            b.y = player.y - 1;
-            b.shape = '+';
-            bullets[bullet_count++] = b;
-        }
-        last_spawn_ms = now;
+static void update_default(BulletClass* self, BULLET_SPEED sp) {
+    Timestamp now = get_time_ms();
+    // 스폰 타이밍 & 용량 체크
+    if (now - self->last_spawn_ms >= (unsigned)sp && self->count < self->capacity) {
+        self->buf[self->count++] = (Bullet){
+            .x = player.x,
+            .y = player.y - 1,
+            .shape = '+'
+        };
+        self->last_spawn_ms = now;
     }
 
-    // 0.05초마다 총알 한 칸씩 앞으로 이동
-    if (now - last_move_ms >= MOVE_INTERVAL_MS) {
-        for (int i = 0; i < bullet_count; ) {
-            bullets[i].y--;
-            if (bullets[i].y < 1)
-                bullets[i] = bullets[--bullet_count];
+    // 이동 타이밍
+    if (now - self->last_move_ms >= MOVE_INTERVAL_MS) {
+        for (Index i = 0; i < self->count; ) {
+            Bullet* b = &self->buf[i];
+            b->y--;
+            if (b->y < 1)
+                // 화면 밖으로 나간 총알은 마지막 요소와 교체 후 카운트 감소
+                self->buf[i] = self->buf[--self->count];
             else i++;
         }
-        last_move_ms = now;
+        self->last_move_ms = now;
     }
-    return 0;
+
+    // 렌더링
+    for (Index i = 0; i < self->count; i++) {
+        Bullet* b = &self->buf[i];
+        screen[b->y][b->x] = b->shape;
+    }
+}
+
+static void update_medium(BulletClass* self, BULLET_SPEED sp) {
+    Timestamp now = get_time_ms();
+
+    // 스폰 타이밍 & 용량 체크 (대각선 2발)
+    if (now - self->last_spawn_ms >= (unsigned)sp && self->count + 2 <= self->capacity) {
+        // 좌/우 대각선 발사
+        for (int dx = -1; dx <= 1; dx += 2) {
+            self->buf[self->count++] = (Bullet){
+                .x = player.x,
+                .y = player.y - 1,
+                .shape = '=',
+                .dx = dx,
+                .dy = -1
+            };
+        }
+        self->last_spawn_ms = now;
+    }
+
+    // 이동 타이밍
+    if (now - self->last_move_ms >= MOVE_INTERVAL_MS) {
+        for (Index i = 0; i < self->count; ) {
+            Bullet* b = &self->buf[i];
+            b->x += b->dx;
+            b->y += b->dy;
+
+            // 화면 밖이면 삭제
+            if (b->y < 1 || b->x < 1 || b->x >= XSIZE - 1)
+                self->buf[i] = self->buf[--self->count];
+            else i++;
+        }
+        self->last_move_ms = now;
+    }
+
+    // 렌더링
+    for (Index i = 0; i < self->count; i++) {
+        Bullet* b = &self->buf[i];
+        screen[b->y][b->x] = b->shape;
+    }
+}
+
+static void update_ultra(BulletClass* self, BULLET_SPEED sp) {
+    Timestamp now = get_time_ms();
+    // 스폰 타이밍 & 용량 체크
+    if (now - self->last_spawn_ms >= (unsigned)sp && self->count < self->capacity) {
+        // 전방 3발 발사
+        for (int dx = -1; dx <= 1; dx++) {
+            Index idx = self->count++;
+            self->buf[idx] = (Bullet){
+                .x = player.x + dx,
+                .y = player.y - 1,
+                .shape = '*',
+                .dx = 0,
+                .dy = -1
+            };
+        }
+        self->last_spawn_ms = now;
+    }
+
+    // 이동 타이밍
+    if (now - self->last_move_ms >= MOVE_INTERVAL_MS) {
+        for (Index i = 0; i < self->count; ) {
+            Bullet* b = &self->buf[i];
+            b->y += b->dy;
+            if (b->y < 1)
+                self->buf[i] = self->buf[--self->count];
+            else i++;
+        }
+        self->last_move_ms = now;
+    }
+
+    // 렌더링
+    for (Index i = 0; i < self->count; i++) {
+        Bullet* b = &self->buf[i];
+        screen[b->y][b->x] = b->shape;
+    }
 }
 
 void draw_bullets() {
-    // 총알 속도 up
     speed = set_bullet_speed(eatX);
-    update_bullets(speed);
-    // 총알 lev up
     level = set_bullet_level(eatE);
-    for (int i = 0; i < bullet_count; i++) {
-        screen[bullets[i].y][bullets[i].x] = bullets[i].shape;
+    BulletManagers[level].update(&BulletManagers[level], speed);
+}
+
+void init_bullets() {
+    for (int i = 0; i < LEVEL_COUNT; i++) {
+        BulletManagers[i].count = 0;
+        BulletManagers[i].last_spawn_ms = BulletManagers[i].last_move_ms = get_time_ms();
     }
 }
 
@@ -93,21 +183,4 @@ char* get_bullet_level() {
     int i = level;
     char* bullet_level[] = { "I", "II", "III" };
     return bullet_level[i];
-}
-
-
-void init_bullet() {
-    last_spawn_ms = last_move_ms = get_time_ms();
-    Bullet bullets[YSIZE] = { 0, };
-    bullet_count = 0;
-    init_bullet_speed();
-    init_bullet_level();
-}
-
-static void init_bullet_speed() {
-    speed = BULLET_SPEED_MIN;
-}
-
-static void init_bullet_level() {
-    level = BULLET_LEVEL_DEFAULT;
 }

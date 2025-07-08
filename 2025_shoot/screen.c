@@ -148,7 +148,7 @@ int start_screen() {
 	init_shield_count();
 	init_score();
 	deactive_shield();
-	init_bullet();
+	init_bullets();
 	init_item();
 	render_screen();
 	return 0;

@@ -128,12 +128,15 @@ void init_enemy() {
 }
 
 static int kill_enemy() {
-    int bcount = get_bullet_count();
+    //int bcount = get_bullet_count();
+    int lvl = get_level();
+    int bcount = BulletManagers[lvl].count;
+    Bullet* buf = BulletManagers[lvl].buf;
     for (int i = 0; i < enemy_count; ) {
         // 총알 충돌 검사
         bool_t removed = FALSE;
         for (int j = 0; j < bcount; j++) {
-            if (bullets[j].x == enemies[i].x && bullets[j].y == enemies[i].y) {
+            if (buf[j].x == enemies[i].x && buf[j].y == enemies[i].y) {
                 add_score();
                 check_exp();
                 enemies[i] = enemies[--enemy_count];

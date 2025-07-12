@@ -136,7 +136,7 @@ static int kill_enemy() {
         bool_t removed = FALSE;
         for (int j = 0; j < bcount; j++) {
             if (buf[j].x == enemies[i].x && buf[j].y == enemies[i].y) {
-                add_score();
+                add_score(1);
                 check_exp();
                 enemies[i] = enemies[--enemy_count];
                 removed = TRUE;
@@ -156,16 +156,16 @@ static int kill_enemy() {
             if (enemies[i].x == player.x && enemies[i].y == player.y)
                 collision = TRUE;
         }
-
         if (collision) {
             if (shield.active) {
                 off_shield_at(i);
-                add_score();
+                add_score(1);
                 check_exp();
                 continue;
             }
             else {
                 minus_death_count();
+                reset_item();
                 set_player_position(XSIZE / 2, YSIZE - 2);
                 enemies[i] = enemies[--enemy_count];
                 continue;

@@ -5,9 +5,9 @@
 #include "screen.h"
 
 // Á¡¼ö
-int add_score();		// adder
-void init_score();		// setter
-int get_score();		// getter
+int add_score(int number);		// adder
+void init_score();				// setter
+int get_score();				// getter
 
 // ·©Å©
 int rank();

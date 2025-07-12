@@ -1,5 +1,4 @@
 #pragma once
-//#include <windows.h>
 #include <time.h>
 #include "constant.h"
 #include "input.h"
@@ -36,7 +35,7 @@ typedef struct BulletClass {
     Timestamp       last_spawn_ms;  // 최근 생성 시간
     Timestamp       last_move_ms;   // 최근 이동 시간
 
-    void (*update)(struct BulletClass* self, BULLET_SPEED sp);
+    void            (*update)(struct BulletClass* self, BULLET_SPEED sp);
 } BulletClass;
 
 extern BulletClass BulletManagers[LEVEL_COUNT];
@@ -46,5 +45,4 @@ char* get_bullet_speed();
 char* get_bullet_level();
 void init_bullets();                            // 총알 초기화
 int get_level();                                // 총알 레벨 반환
-
 unsigned long get_time_ms();					//

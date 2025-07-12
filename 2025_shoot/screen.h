@@ -7,7 +7,8 @@
 #include "score.h"
 #include "constant.h"
 #include "skill.h"
-#include <windows.h>
+#include "boss.h"
+//#include <windows.h>
 
 extern char screen[YSIZE][XSIZE];
 

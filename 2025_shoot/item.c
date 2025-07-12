@@ -18,9 +18,13 @@ char get_item_shape(int n) {
 }
 
 void init_item() {
+    reset_item();
+    item_count = 0;
+}
+
+void reset_item() {
     itemX = ITEM_X;
     itemE = ITEM_EQUAL;
-    item_count = 0;
     spawn_requested = 0;
     eatX = 0;
     eatE = 0;

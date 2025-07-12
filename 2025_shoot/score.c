@@ -28,12 +28,13 @@ static void swap(Rankers* x, Rankers* y);
 int rank() {
 	char answer;
 	show_console_cursor();
+	system("cls");
+	game_clear ?
+		printf("\n\033[1;34m * game clear *\033[0m\n") :
+		printf("\n\033[1;34m * game over *\033[0m\n");
+	printf("\n\033[1;36m score: %d\033[0m\n", score);
 	while (1) {
-		system("cls");
-		//printf("\033[2J\033[H");
-		printf("\n\033[1;32m * game over *\033[0m\n");
-		printf("\n\033[1;35m score: %d\033[0m\n", score);
-		printf("\n 점수를 등록 하시겠습니까(y/n)?: ");
+		printf("\n\033[1;33m 점수를 등록 하시겠습니까(y/n)?: \033[0m");
 		scanf_s("%1c%*c", &answer, 1);
 		if (answer == 'y') {
 			if (add_ranker()) return 1;
@@ -64,7 +65,7 @@ static Rankers* make_node(char* nick, int index) {
 static int add_ranker() {
 	char nick[32];
 	int is_sorted = 1;
-	printf("\n 등록할 이름을 적어주세요: ");
+	printf("\n\033[1;33m 등록할 이름을 적어주세요: \033[0m");
 	scanf_s("%31s%*c", nick, (unsigned)sizeof(nick));
 	int score = get_score();
 	int index = find_index(rankers, score, 0, rc);
@@ -202,8 +203,8 @@ static int free_rankers() {
 }
 
 static void show_rank() {
-	printf("\033[2J\033[H");
-	printf("\n *Rank*\n");
+	system("cls");
+	printf("\n\033[1;35m *Rank*\033[0m\n");
 	int seq = 1;
 	for (int i = 1; i <= RANK_MAX; i++) {
 		if (!rankers[RANK_MAX - i].first) continue;
@@ -211,9 +212,9 @@ static void show_rank() {
 			Ranker* head, *next;
 			head = rankers[RANK_MAX - i].first;
 			next = head->next;
-			printf("\n == Score: %d ==\n", rankers[RANK_MAX - i].score);
+			printf("\n\033[1;36m == Score: %d ==\033[0m\n", rankers[RANK_MAX - i].score);
 			while (head != NULL) {
-				printf(" * %s *\n", head->name);
+				printf("\033[1;33m * %s *\033[0m\n", head->name);
 				if (!next) break;
 				head = next;
 				next = head->next;
@@ -223,8 +224,9 @@ static void show_rank() {
 	}
 }
 
-int add_score() {
-	return ++score;
+int add_score(int number) {
+	score += number;
+	return score;
 }
 
 int get_score() {

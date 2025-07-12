@@ -12,11 +12,12 @@ static BULLET_LEVEL set_bullet_level(int e);                          // 레벨 설
 static void update_default(BulletClass* self, BULLET_SPEED sp);       // 기본 한줄
 static void update_medium(BulletClass* self, BULLET_SPEED sp);        // 대각 양방향
 static void update_ultra(BulletClass* self, BULLET_SPEED sp);         // 전방 3줄
+static void render_bullets(BulletClass* self);
 
 BulletClass BulletManagers[LEVEL_COUNT] = {
     { bullets_default,  YSIZE, 0, 0, 0, update_default },
-    { bullets_medium,   2 * YSIZE, 0, 0, 0, update_medium  },
-    { bullets_ultra,    3 * YSIZE, 0, 0, 0, update_ultra   },
+    { bullets_medium,   2 * YSIZE, 0, 0, 0, update_medium },
+    { bullets_ultra,    3 * YSIZE, 0, 0, 0, update_ultra  },
 };
 
 int get_level() {
@@ -27,7 +28,7 @@ unsigned long get_time_ms() {
     return (unsigned long)(clock() * MS_PER_SEC / CLOCKS_PER_SEC);
 }
 
-static enum BULLET_SPEED set_bullet_speed(int x) {
+static BULLET_SPEED set_bullet_speed(int x) {
     int k = x;
     enum BULLET_SPEED lev;
     switch (k) {
@@ -40,7 +41,7 @@ static enum BULLET_SPEED set_bullet_speed(int x) {
     return lev;
 }
 
-static enum BULLET_LEVEL set_bullet_level(int e) {
+static BULLET_LEVEL set_bullet_level(int e) {
     int k = e;
     enum BULLET_LEVEL lev;
     switch (k) {
@@ -73,11 +74,7 @@ static void update_default(BulletClass* self, BULLET_SPEED sp) {
         }
         self->last_move_ms = now;
     }
-    // 렌더링
-    for (Index i = 0; i < self->count; i++) {
-        Bullet* b = &self->buf[i];
-        screen[b->y][b->x] = b->shape;
-    }
+    render_bullets(self);
 }
 
 static void update_medium(BulletClass* self, BULLET_SPEED sp) {
@@ -108,11 +105,7 @@ static void update_medium(BulletClass* self, BULLET_SPEED sp) {
         }
         self->last_move_ms = now;
     }
-    // 렌더링
-    for (Index i = 0; i < self->count; i++) {
-        Bullet* b = &self->buf[i];
-        screen[b->y][b->x] = b->shape;
-    }
+    render_bullets(self);
 }
 
 static void update_ultra(BulletClass* self, BULLET_SPEED sp) {
@@ -143,7 +136,10 @@ static void update_ultra(BulletClass* self, BULLET_SPEED sp) {
         }
         self->last_move_ms = now;
     }
-    // 렌더링
+    render_bullets(self);
+}
+
+static void render_bullets(BulletClass* self) {
     for (Index i = 0; i < self->count; i++) {
         Bullet* b = &self->buf[i];
         screen[b->y][b->x] = b->shape;

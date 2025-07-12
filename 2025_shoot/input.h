@@ -8,6 +8,7 @@
 
 extern int game_over;
 extern int quit;
+extern int game_clear;
 
 void quit_game();
 void init_game();

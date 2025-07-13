@@ -76,13 +76,13 @@ static int show_choose_screen(void) {
 
 static int show_screen_whole() {
 	enum {
-		EXIT_LEN = sizeof("\033[1;33m exit: q\n") - 1,
-		RESTART_LEN = sizeof("\t restart: r\n") - 1,
-		SHIELD_LEN = sizeof("\n shield:99") - 1,							
-		DEATH_LEN = sizeof("\t\t\t    death_count:99") - 1,					
-		SCORE_LEN = sizeof("\t\t      score:999\n") - 1,					
-		SPEED_LEN = sizeof("\t\t       speed:III"),
-		LEVEL_LEN = sizeof("\t\t      level:III\n")
+		EXIT_LEN = sizeof("\033[1;36m exit: q\033[0m\n") - 1,
+		RESTART_LEN = sizeof("\t\033[1;36m restart: r\033[0m\n") - 1,
+		SHIELD_LEN = sizeof("\n\033[1;36m shield:99\033[0m") - 1,							
+		DEATH_LEN = sizeof("\t\t\t    \033[1;36mdeath_count:99\033[0m") - 1,					
+		SCORE_LEN = sizeof("\t\t      \033[1;36mscore:999\033[0m\n") - 1,					
+		SPEED_LEN = sizeof("\t\t       \033[1;36mspeed:III\033[0m"),
+		LEVEL_LEN = sizeof("\t\t      \033[1;36mlevel:III\033[0m\n")
 	};
 	static char buf[
 		SHIELD_LEN +
@@ -96,13 +96,13 @@ static int show_screen_whole() {
 	];
 	char* p = buf;
 	// shield_cout
-	int k = sprintf(p, "\n shield:%2d", get_shield_count());
+	int k = sprintf(p, "\n\033[1;36m shield:%2d\033[0m", get_shield_count());
 	p += k;
 	// death_cout
-	int d = sprintf(p, "\t\t\t   death_count:%2d", get_death_count());
+	int d = sprintf(p, "\t\t\t\033[1;36m   death_count:%2d\033[0m", get_death_count());
 	p += d;
 	// score
-	int s = sprintf(p, "\t\t       score:%3d\n", get_score());
+	int s = sprintf(p, "\t\t\033[1;36m       score:%3d\033[0m\033[1;33m\n", get_score());
 	p += s;
 	for (int y = 0; y < YSIZE; y++) {
 		memcpy(p, screen[y], XSIZE);
@@ -110,16 +110,16 @@ static int show_screen_whole() {
 		*p++ = '\n';
 	}
 	// exit
-	memcpy(p, "\033[1;33m exit: q\033[0m", EXIT_LEN);
+	memcpy(p, "\033[0m\033[1;36m exit: q\033[0m", EXIT_LEN);
 	p += EXIT_LEN;
 	// restart
-	memcpy(p, "\t restart: r", RESTART_LEN);
+	memcpy(p, "\t\033[1;36m restart: r\033[0m", RESTART_LEN);
 	p += RESTART_LEN;
 	// bullet speed
-	int b = sprintf(p, "\t\t      speed:%3s", get_bullet_speed());
+	int b = sprintf(p, "\t\t\033[1;36m      speed:%3s\033[0m", get_bullet_speed());
 	p += b;
 
-	int l = sprintf(p, "\t\t      level:%3s\n", get_bullet_level());
+	int l = sprintf(p, "\t\t\033[1;36m      level:%3s\033[0m\n", get_bullet_level());
 	p += l;
 	fwrite(buf, 1, p - buf, stdout);
 	fflush(stdout);

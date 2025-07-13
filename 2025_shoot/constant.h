@@ -6,7 +6,7 @@ typedef enum { BOOL_FALSE = 0, BOOL_TRUE = 1 } bool_t;
 #define FALSE               BOOL_FALSE
 
 #define XSIZE               80			                    // 화면 가로 크기		80	
-#define	YSIZE               30			                    // 세로 크기			모니터: 45, 노트북: 25
+#define	YSIZE               30			                    // 세로 크기			모니터: 45, 노트북: 30
 #define SPAWN_Y             1                               // y = 1
 #define EXP                 4                               // 레벨업 경험치
 #define ENEMY_MAX           999                             // 적기 최대 생성 수

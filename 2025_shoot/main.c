@@ -4,7 +4,6 @@
 #include "input.h"
 #include "score.h"
 #include "skill.h"
-#include "windows.h"
 
 int main() {
 	init();
@@ -13,7 +12,6 @@ int main() {
 		while (!game_over) {
 			input[quit | game_over]();
 			render_screen();
-			Sleep(16);
 		}
 		if (rank()) return 1;
 		input[quit | game_over]();

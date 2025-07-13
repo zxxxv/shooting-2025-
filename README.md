@@ -1,3 +1,6 @@
+## 디렉토리 구조
+
+``` console
 2025_shoot/
 ├── src/                   # 소스 코드 디렉토리  
 │   ├── main.c             # 게임 메인 로직  
@@ -20,4 +23,5 @@
 │   ├── screen.h  
 │   ├── skill.h  
 │   └── constant.h  
-└── README.md   
+└── README.md
+```
